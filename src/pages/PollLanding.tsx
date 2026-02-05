@@ -1,5 +1,5 @@
 import { Link, useParams, useNavigate } from "react-router-dom";
-import { ArrowRight, Clock, Users, MessageSquare } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getPollWithQuestions } from "@/lib/polls";
 import { useQuery } from "@tanstack/react-query";
@@ -23,19 +23,20 @@ const PollLanding = () => {
 
   if (isLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <div className="h-10 w-10 animate-spin rounded-full border-4 border-primary border-t-transparent" />
       </div>
     );
   }
 
   if (error || !poll) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center gap-4">
-        <h1 className="font-display text-2xl font-semibold">Poll not found</h1>
-        <p className="text-muted-foreground">This poll doesn't exist or has been removed.</p>
+      <div className="flex min-h-screen flex-col items-center justify-center gap-6 bg-background p-4">
+        <div className="text-6xl">🤷</div>
+        <h1 className="text-2xl font-bold">poll not found</h1>
+        <p className="text-muted-foreground">this poll doesn't exist or has been removed</p>
         <Link to="/">
-          <Button variant="outline">Go home</Button>
+          <Button variant="outline" className="rounded-2xl">go home</Button>
         </Link>
       </div>
     );
@@ -46,85 +47,83 @@ const PollLanding = () => {
   return (
     <div className="flex min-h-screen flex-col bg-background">
       {/* Header */}
-      <header className="border-b border-border/50 bg-background/80 backdrop-blur-md">
-        <div className="container flex h-14 items-center justify-between">
-          <Link to="/" className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-              <span className="font-display text-sm font-bold text-primary-foreground">A</span>
-            </div>
-            <span className="font-display font-bold">ASKANAI</span>
+      <header className="flex items-center justify-between p-4">
+        <Link to="/" className="flex items-center gap-2">
+          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-primary">
+            <span className="font-display text-sm font-bold text-primary-foreground">A</span>
+          </div>
+        </Link>
+        {isClosed && (
+          <Link to={`/p/${slug}/results`}>
+            <Button variant="ghost" size="sm" className="text-muted-foreground">
+              view results
+            </Button>
           </Link>
-        </div>
+        )}
       </header>
 
       {/* Main content */}
-      <main className="flex flex-1 flex-col">
-        <div className="question-container">
-          <div className="w-full max-w-xl animate-slide-up space-y-8 text-center">
-            {/* Status badge */}
-            <div className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-sm font-medium ${
-              isClosed 
-                ? 'bg-muted text-muted-foreground' 
-                : 'bg-success/10 text-success'
-            }`}>
-              <div className={`h-2 w-2 rounded-full ${isClosed ? 'bg-muted-foreground' : 'bg-success animate-pulse'}`} />
-              {isClosed ? 'Closed' : 'Open for responses'}
+      <main className="flex flex-1 flex-col items-center justify-center px-4 pb-20">
+        <div className="w-full max-w-lg space-y-8 text-center animate-slide-up">
+          {/* Status */}
+          {isClosed ? (
+            <div className="inline-flex items-center gap-2 rounded-full bg-muted px-4 py-2 text-sm text-muted-foreground">
+              <span>⏹️</span>
+              <span>closed</span>
             </div>
-
-            {/* Title */}
-            <div>
-              <h1 className="mb-4 font-display text-display-sm md:text-display-md">
-                {poll.title}
-              </h1>
-              {poll.description && (
-                <p className="text-lg text-muted-foreground">{poll.description}</p>
-              )}
+          ) : (
+            <div className="inline-flex items-center gap-2 rounded-full bg-accent/10 px-4 py-2 text-sm text-accent">
+              <div className="pulse-dot" />
+              <span>live</span>
             </div>
+          )}
 
-            {/* Stats */}
-            <div className="flex justify-center gap-6 text-sm text-muted-foreground">
-              <div className="flex items-center gap-2">
-                <MessageSquare className="h-4 w-4" />
-                {questions.length} question{questions.length !== 1 && 's'}
-              </div>
-              <div className="flex items-center gap-2">
-                <Clock className="h-4 w-4" />
-                ~{Math.max(1, Math.ceil(questions.length * 0.5))} min
-              </div>
-            </div>
+          {/* Title */}
+          <h1 className="text-4xl font-bold leading-tight md:text-5xl">
+            {poll.title}
+          </h1>
 
-            {/* CTA */}
-            {isClosed ? (
-              <div className="space-y-4">
-                <p className="text-muted-foreground">This poll is no longer accepting responses.</p>
-                <Link to={`/p/${slug}/results`}>
-                  <Button size="lg" className="btn-hero h-14 px-10 text-lg">
-                    View Results
-                    <ArrowRight className="ml-2 h-5 w-5" />
-                  </Button>
-                </Link>
-              </div>
-            ) : (
-              <>
-                <Button onClick={startPoll} size="lg" className="btn-hero h-14 px-10 text-lg">
-                  Start
+          {/* Description */}
+          {poll.description && (
+            <p className="text-lg text-muted-foreground">{poll.description}</p>
+          )}
+
+          {/* Stats */}
+          <div className="flex items-center justify-center gap-4 text-sm text-muted-foreground">
+            <span>{questions.length} question{questions.length !== 1 ? "s" : ""}</span>
+            <span className="h-1 w-1 rounded-full bg-muted-foreground" />
+            <span>~{Math.max(1, Math.ceil(questions.length * 0.5))} min</span>
+          </div>
+
+          {/* CTA */}
+          {isClosed ? (
+            <div className="space-y-4">
+              <p className="text-muted-foreground">this poll is no longer accepting responses</p>
+              <Link to={`/p/${slug}/results`}>
+                <Button className="btn-neon">
+                  view results
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
-                <p className="text-sm text-muted-foreground">
-                  Your responses are anonymous
-                </p>
-              </>
-            )}
-          </div>
+              </Link>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              <Button onClick={startPoll} className="btn-neon h-16 px-12 text-xl">
+                start
+                <ArrowRight className="ml-2 h-6 w-6" />
+              </Button>
+              <p className="text-sm text-muted-foreground opacity-60">
+                anonymous • no login required
+              </p>
+            </div>
+          )}
         </div>
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-border/50 py-4">
-        <div className="container text-center text-sm text-muted-foreground">
-          Powered by <Link to="/" className="font-medium text-primary hover:underline">ASKANAI</Link>
-        </div>
-      </footer>
+      <div className="p-4 text-center text-sm text-muted-foreground opacity-40">
+        powered by <Link to="/" className="hover:text-primary transition-colors">ASKANAI</Link>
+      </div>
     </div>
   );
 };
