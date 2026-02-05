@@ -1,13 +1,13 @@
 import { supabase } from "@/integrations/supabase/client";
 
 // Types
+// Public poll interface - excludes sensitive fields like creator_key_hash
 export interface Poll {
   id: string;
   slug: string;
   title: string;
   description: string | null;
   status: 'draft' | 'open' | 'closed';
-  creator_key_hash: string | null;
   created_by_user_id: string | null;
   open_until: string | null;
   close_after_responses: number | null;
@@ -15,6 +15,11 @@ export interface Poll {
   allow_comments: boolean;
   created_at: string;
   updated_at: string;
+}
+
+// Internal poll interface with sensitive fields (used only server-side/admin)
+interface PollInternal extends Poll {
+  creator_key_hash: string | null;
 }
 
 export interface Question {
@@ -204,11 +209,15 @@ const hashKey = async (key: string): Promise<string> => {
   return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 };
 
-// Get poll by slug
+// Get poll by slug - explicitly excludes creator_key_hash for security
 export const getPollBySlug = async (slug: string): Promise<Poll | null> => {
   const { data, error } = await supabase
     .from('polls')
-    .select('*')
+    .select(`
+      id, slug, title, description, status, created_by_user_id,
+      open_until, close_after_responses, visibility_mode,
+      allow_comments, created_at, updated_at
+    `)
     .eq('slug', slug)
     .single();
 
