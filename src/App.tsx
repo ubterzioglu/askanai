@@ -9,6 +9,11 @@ import PollLanding from "./pages/PollLanding";
 import PollQuestion from "./pages/PollQuestion";
 import PollResults from "./pages/PollResults";
 import NotFound from "./pages/NotFound";
+import AdminLogin from "./pages/admin/AdminLogin";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminPolls from "./pages/admin/AdminPolls";
+import AdminComments from "./pages/admin/AdminComments";
+import AdminTickets from "./pages/admin/AdminTickets";
 
 const queryClient = new QueryClient();
 
@@ -24,6 +29,14 @@ const App = () => (
           <Route path="/p/:slug" element={<PollLanding />} />
           <Route path="/p/:slug/q/:questionNum" element={<PollQuestion />} />
           <Route path="/p/:slug/results" element={<PollResults />} />
+          
+          {/* Admin Routes */}
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/admin/polls" element={<AdminPolls />} />
+          <Route path="/admin/comments" element={<AdminComments />} />
+          <Route path="/admin/tickets" element={<AdminTickets />} />
+          
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
