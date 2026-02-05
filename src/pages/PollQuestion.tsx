@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { getPollWithQuestions, submitResponse, type Question, type Option } from "@/lib/polls";
 import { useQuery } from "@tanstack/react-query";
+import { SwipeCard } from "@/components/SwipeCard";
 
 const PollQuestion = () => {
   const { slug, questionNum } = useParams();
@@ -16,6 +17,7 @@ const PollQuestion = () => {
     const saved = sessionStorage.getItem(`poll-${slug}-answers`);
     return saved ? JSON.parse(saved) : {};
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { data: pollData, isLoading, error } = useQuery({
     queryKey: ['poll', slug],
@@ -38,7 +40,7 @@ const PollQuestion = () => {
     if (currentQ < totalQuestions - 1) {
       navigate(`/p/${slug}/q/${currentQ + 2}`);
     } else if (poll) {
-      // Submit all answers
+      setIsSubmitting(true);
       await submitResponse(poll.id, answers);
       sessionStorage.removeItem(`poll-${slug}-answers`);
       navigate(`/p/${slug}/results`);
@@ -63,24 +65,24 @@ const PollQuestion = () => {
 
   if (isLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <div className="h-10 w-10 animate-spin rounded-full border-4 border-primary border-t-transparent" />
       </div>
     );
   }
 
   if (error || !question) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center gap-4">
-        <p className="text-muted-foreground">Question not found</p>
+      <div className="flex min-h-screen flex-col items-center justify-center gap-6 bg-background">
+        <div className="text-6xl">🤔</div>
+        <p className="text-muted-foreground">question not found</p>
         <Link to={`/p/${slug}`}>
-          <Button variant="outline">Back to poll</Button>
+          <Button variant="outline" className="rounded-2xl">back to poll</Button>
         </Link>
       </div>
     );
   }
 
-  // Get options from the question (from database or default for emoji/rating)
   const getQuestionOptions = (): string[] => {
     if (question.type === 'emoji') {
       return question.settings_json?.emojis || ["😍", "😊", "😐", "😕", "😢"];
@@ -90,185 +92,209 @@ const PollQuestion = () => {
 
   const options = getQuestionOptions();
 
+  // Auto-advance for single selection types
+  const handleOptionSelect = (value: any, autoAdvance: boolean = false) => {
+    setAnswer(value);
+    if (autoAdvance && canProceed) {
+      setTimeout(() => {
+        if (currentQ < totalQuestions - 1) {
+          navigate(`/p/${slug}/q/${currentQ + 2}`);
+        }
+      }, 300);
+    }
+  };
+
   return (
     <div className="flex min-h-screen flex-col bg-background">
       {/* Progress header */}
-      <header className="sticky top-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-md">
-        <div className="container flex h-14 items-center justify-between">
-          <Button variant="ghost" size="sm" onClick={handleBack}>
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back
-          </Button>
-          <span className="text-sm text-muted-foreground">
-            {currentQ + 1} of {totalQuestions}
-          </span>
-          <div className="w-16" />
-        </div>
-        <div className="progress-bar">
-          <div
-            className="progress-bar-fill"
-            style={{ width: `${((currentQ + 1) / totalQuestions) * 100}%` }}
-          />
+      <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-xl">
+        <div className="flex items-center justify-between p-4">
+          <button
+            onClick={handleBack}
+            className="flex h-10 w-10 items-center justify-center rounded-xl text-muted-foreground hover:bg-muted transition-colors"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </button>
+          <div className="flex items-center gap-2">
+            {questions.map((_, i) => (
+              <div
+                key={i}
+                className={cn(
+                  "h-1.5 rounded-full transition-all duration-300",
+                  i === currentQ ? "w-8 bg-primary" : i < currentQ ? "w-4 bg-primary/50" : "w-4 bg-muted"
+                )}
+              />
+            ))}
+          </div>
+          <div className="w-10" />
         </div>
       </header>
 
       {/* Question area */}
-      <main className="flex flex-1 flex-col">
-        <div className="question-container animate-slide-up">
-          <div className="w-full max-w-xl space-y-8">
-            <div className="text-center">
-              <p className="mb-2 text-sm font-medium text-primary">
-                Question {currentQ + 1}
-                {question.is_required && <span className="ml-1 text-destructive">*</span>}
-              </p>
-              <h1 className="font-display text-2xl font-semibold md:text-3xl">
-                {question.prompt}
-              </h1>
-            </div>
+      <main className="flex flex-1 flex-col items-center justify-center px-4 pb-32">
+        <div className="w-full max-w-lg animate-slide-up">
+          {/* Question number */}
+          <div className="mb-4 text-center">
+            <span className="text-sm text-primary font-medium">
+              {currentQ + 1}/{totalQuestions}
+            </span>
+          </div>
 
-            {/* Single Choice */}
-            {question.type === "single_choice" && (
-              <div className="space-y-3">
-                {options.map((option) => (
+          {/* Question text */}
+          <h1 className="mb-8 text-center text-3xl font-bold leading-tight md:text-4xl">
+            {question.prompt}
+            {question.is_required && (
+              <span className="ml-1 text-destructive">*</span>
+            )}
+          </h1>
+
+          {/* Single Choice */}
+          {question.type === "single_choice" && (
+            <div className="space-y-3">
+              {options.map((option, i) => (
+                <button
+                  key={option}
+                  onClick={() => handleOptionSelect(option, true)}
+                  className={cn(
+                    "poll-option w-full text-left",
+                    currentAnswer === option && "selected"
+                  )}
+                >
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-border text-sm font-medium">
+                    {currentAnswer === option ? (
+                      <Check className="h-4 w-4 text-primary" />
+                    ) : (
+                      String.fromCharCode(65 + i)
+                    )}
+                  </div>
+                  <span className="flex-1 text-lg font-medium">{option}</span>
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Multiple Choice */}
+          {question.type === "multiple_choice" && (
+            <div className="space-y-3">
+              {options.map((option, i) => {
+                const selected = (currentAnswer || []).includes(option);
+                return (
                   <button
                     key={option}
-                    onClick={() => setAnswer(option)}
-                    className={cn(
-                      "poll-option w-full text-left",
-                      currentAnswer === option && "selected"
-                    )}
+                    onClick={() => {
+                      const current = currentAnswer || [];
+                      setAnswer(
+                        selected
+                          ? current.filter((o: string) => o !== option)
+                          : [...current, option]
+                      );
+                    }}
+                    className={cn("poll-option w-full text-left", selected && "selected")}
                   >
-                    <div
-                      className={cn(
-                        "flex h-6 w-6 items-center justify-center rounded-full border-2 transition-colors",
-                        currentAnswer === option
-                          ? "border-primary bg-primary"
-                          : "border-border"
-                      )}
-                    >
-                      {currentAnswer === option && (
-                        <Check className="h-4 w-4 text-primary-foreground" />
-                      )}
+                    <div className={cn(
+                      "flex h-8 w-8 items-center justify-center rounded-lg border-2 transition-colors",
+                      selected ? "border-primary bg-primary text-primary-foreground" : "border-border"
+                    )}>
+                      {selected && <Check className="h-4 w-4" />}
                     </div>
-                    <span className="text-base font-medium">{option}</span>
+                    <span className="flex-1 text-lg font-medium">{option}</span>
                   </button>
-                ))}
-              </div>
-            )}
+                );
+              })}
+            </div>
+          )}
 
-            {/* Multiple Choice */}
-            {question.type === "multiple_choice" && (
-              <div className="space-y-3">
-                {options.map((option) => {
-                  const selected = (currentAnswer || []).includes(option);
-                  return (
-                    <button
-                      key={option}
-                      onClick={() => {
-                        const current = currentAnswer || [];
-                        setAnswer(
-                          selected
-                            ? current.filter((o: string) => o !== option)
-                            : [...current, option]
-                        );
-                      }}
-                      className={cn("poll-option w-full text-left", selected && "selected")}
-                    >
-                      <div
-                        className={cn(
-                          "flex h-6 w-6 items-center justify-center rounded-md border-2 transition-colors",
-                          selected ? "border-primary bg-primary" : "border-border"
-                        )}
-                      >
-                        {selected && <Check className="h-4 w-4 text-primary-foreground" />}
-                      </div>
-                      <span className="text-base font-medium">{option}</span>
-                    </button>
-                  );
-                })}
-              </div>
-            )}
+          {/* Rating (1-5) */}
+          {question.type === "rating" && (
+            <div className="flex justify-center gap-4">
+              {[1, 2, 3, 4, 5].map((num) => (
+                <button
+                  key={num}
+                  onClick={() => handleOptionSelect(num, true)}
+                  className={cn(
+                    "rating-option h-16 w-16 text-2xl",
+                    currentAnswer === num && "selected"
+                  )}
+                >
+                  {num}
+                </button>
+              ))}
+            </div>
+          )}
 
-            {/* Rating (1-5) */}
-            {question.type === "rating" && (
-              <div className="flex justify-center gap-3">
-                {[1, 2, 3, 4, 5].map((num) => (
+          {/* NPS (0-10) */}
+          {question.type === "nps" && (
+            <div>
+              <div className="mb-4 flex flex-wrap justify-center gap-2">
+                {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
                   <button
                     key={num}
-                    onClick={() => setAnswer(num)}
-                    className={cn("rating-option", currentAnswer === num && "selected")}
+                    onClick={() => handleOptionSelect(num, true)}
+                    className={cn(
+                      "rating-option h-12 w-12",
+                      currentAnswer === num && "selected"
+                    )}
                   >
                     {num}
                   </button>
                 ))}
               </div>
-            )}
-
-            {/* NPS (0-10) */}
-            {question.type === "nps" && (
-              <div>
-                <div className="mb-3 flex flex-wrap justify-center gap-2">
-                  {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
-                    <button
-                      key={num}
-                      onClick={() => setAnswer(num)}
-                      className={cn(
-                        "rating-option h-10 w-10 text-sm",
-                        currentAnswer === num && "selected"
-                      )}
-                    >
-                      {num}
-                    </button>
-                  ))}
-                </div>
-                <div className="flex justify-between text-sm text-muted-foreground">
-                  <span>Not likely</span>
-                  <span>Very likely</span>
-                </div>
+              <div className="flex justify-between text-sm text-muted-foreground">
+                <span>not likely</span>
+                <span>very likely</span>
               </div>
-            )}
+            </div>
+          )}
 
-            {/* Emoji */}
-            {question.type === "emoji" && (
-              <div className="flex justify-center gap-4">
-                {options.map((emoji) => (
-                  <button
-                    key={emoji}
-                    onClick={() => setAnswer(emoji)}
-                    className={cn("emoji-option", currentAnswer === emoji && "selected")}
-                  >
-                    {emoji}
-                  </button>
-                ))}
-              </div>
-            )}
+          {/* Emoji */}
+          {question.type === "emoji" && (
+            <div className="flex justify-center gap-4">
+              {options.map((emoji) => (
+                <button
+                  key={emoji}
+                  onClick={() => handleOptionSelect(emoji, true)}
+                  className={cn("emoji-option", currentAnswer === emoji && "selected")}
+                >
+                  {emoji}
+                </button>
+              ))}
+            </div>
+          )}
 
-            {/* Short Text */}
-            {question.type === "short_text" && (
-              <Input
-                placeholder="Type your answer..."
-                value={currentAnswer || ""}
-                onChange={(e) => setAnswer(e.target.value)}
-                className="input-floating text-center text-lg"
-              />
-            )}
-          </div>
-        </div>
-
-        {/* Navigation */}
-        <div className="border-t border-border/50 p-4">
-          <div className="container flex justify-center">
-            <Button
-              onClick={handleNext}
-              disabled={!canProceed}
-              className="btn-hero min-w-[200px]"
-            >
-              {currentQ === totalQuestions - 1 ? "Submit" : "Next"}
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </Button>
-          </div>
+          {/* Short Text */}
+          {question.type === "short_text" && (
+            <Input
+              placeholder="type your answer..."
+              value={currentAnswer || ""}
+              onChange={(e) => setAnswer(e.target.value)}
+              className="input-floating text-center text-xl"
+              autoFocus
+            />
+          )}
         </div>
       </main>
+
+      {/* Navigation */}
+      <div className="fixed bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-background via-background to-transparent">
+        <div className="flex justify-center">
+          <Button
+            onClick={handleNext}
+            disabled={!canProceed || isSubmitting}
+            className="btn-neon min-w-[200px]"
+          >
+            {isSubmitting ? (
+              <div className="h-5 w-5 animate-spin rounded-full border-2 border-primary-foreground border-t-transparent" />
+            ) : currentQ === totalQuestions - 1 ? (
+              <>submit</>
+            ) : (
+              <>
+                next
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </>
+            )}
+          </Button>
+        </div>
+      </div>
     </div>
   );
 };
