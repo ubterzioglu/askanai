@@ -341,6 +341,18 @@ export type Database = {
         }
         Returns: boolean
       }
+      update_anonymous_poll: {
+        Args: {
+          _allow_comments?: boolean
+          _creator_key_hash: string
+          _description?: string
+          _poll_id: string
+          _status?: Database["public"]["Enums"]["poll_status"]
+          _title?: string
+          _visibility_mode?: Database["public"]["Enums"]["visibility_mode"]
+        }
+        Returns: boolean
+      }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
