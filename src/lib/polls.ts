@@ -41,11 +41,11 @@ export interface Option {
   created_at: string;
 }
 
+// Public response interface - excludes fingerprint for privacy
 export interface Response {
   id: string;
   poll_id: string;
   respondent_name: string | null;
-  fingerprint: string | null;
   user_id: string | null;
   created_at: string;
 }
@@ -60,12 +60,12 @@ export interface Answer {
   created_at: string;
 }
 
+// Public comment interface - excludes fingerprint for privacy
 export interface Comment {
   id: string;
   poll_id: string;
   display_name: string | null;
   body: string;
-  fingerprint: string | null;
   user_id: string | null;
   status: 'visible' | 'hidden' | 'flagged';
   created_at: string;
@@ -370,11 +370,11 @@ export const getPollResults = async (pollId: string) => {
   };
 };
 
-// Get comments
+// Get comments - excludes fingerprint for privacy
 export const getComments = async (pollId: string): Promise<Comment[]> => {
   const { data, error } = await supabase
     .from('comments')
-    .select('*')
+    .select('id, poll_id, display_name, body, user_id, status, created_at')
     .eq('poll_id', pollId)
     .eq('status', 'visible')
     .order('created_at', { ascending: false });
