@@ -1,4 +1,5 @@
-import { Copy, Share2, ExternalLink, Plus, X } from "lucide-react";
+import { useState } from "react";
+import { Copy, Share2, ExternalLink, Plus, X, Code } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
@@ -17,11 +18,20 @@ export const ShareSheet = ({
   pollTitle,
   onCreateAnother,
 }: ShareSheetProps) => {
+  const [showEmbed, setShowEmbed] = useState(false);
+  
   if (!isOpen) return null;
+
+  const embedCode = `<iframe src="${pollUrl}?embed=true" width="100%" height="500" frameborder="0" style="border-radius: 16px; max-width: 500px;"></iframe>`;
 
   const handleCopyLink = async () => {
     await navigator.clipboard.writeText(pollUrl);
     toast.success("Link copied! 🔗");
+  };
+
+  const handleCopyEmbed = async () => {
+    await navigator.clipboard.writeText(embedCode);
+    toast.success("Embed code copied! 📦");
   };
 
   const handleWhatsAppShare = () => {
@@ -82,6 +92,37 @@ export const ShareSheet = ({
               <p className="text-sm text-muted-foreground">Send to friends</p>
             </div>
           </button>
+
+          {/* Embed Code Section */}
+          <button
+            onClick={() => setShowEmbed(!showEmbed)}
+            className="flex w-full items-center gap-4 rounded-2xl border border-border bg-card/60 p-4 transition-all hover:border-purple-500/50 hover:bg-card"
+          >
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-purple-500/20 text-purple-500">
+              <Code className="h-6 w-6" />
+            </div>
+            <div className="flex-1 text-left">
+              <p className="font-semibold">Embed code</p>
+              <p className="text-sm text-muted-foreground">Add to your website</p>
+            </div>
+          </button>
+
+          {showEmbed && (
+            <div className="rounded-2xl border border-border bg-muted/50 p-4 space-y-3 animate-slide-up">
+              <pre className="text-xs text-muted-foreground overflow-x-auto whitespace-pre-wrap break-all bg-background/50 rounded-xl p-3 border border-border">
+                {embedCode}
+              </pre>
+              <Button
+                onClick={handleCopyEmbed}
+                variant="outline"
+                size="sm"
+                className="w-full"
+              >
+                <Copy className="h-4 w-4 mr-2" />
+                Copy embed code
+              </Button>
+            </div>
+          )}
 
           <button
             onClick={handleOpenResults}
