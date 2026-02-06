@@ -86,7 +86,7 @@ const Index = () => {
             >
               <div className="flex items-center gap-2">
                 <Sparkles className="h-4 w-4 text-primary" />
-                <span>to sign up or not to sign up 🎭</span>
+                <span>why sign up?</span>
               </div>
               <ChevronDown className={cn("h-4 w-4 transition-transform", showComparison && "rotate-180")} />
             </button>
