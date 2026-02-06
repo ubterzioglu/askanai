@@ -22,11 +22,11 @@ const Index = () => {
 
       {/* Main content */}
       <div className="relative z-10 flex min-h-screen flex-col">
-        {/* Header - empty spacer */}
-        <header className="p-6" />
+        {/* Header - reduced spacer */}
+        <header className="p-3" />
 
         {/* Hero - Central ask input */}
-        <main className="flex flex-1 flex-col items-center justify-center px-4 pb-20">
+        <main className="flex flex-1 flex-col items-center justify-center px-4 pb-20 -mt-16">
           <div className="w-full max-w-2xl space-y-8 text-center animate-slide-up">
             {/* Tagline */}
             <div className="space-y-3">
