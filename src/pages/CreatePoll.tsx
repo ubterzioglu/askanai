@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
-import { ArrowLeft, Plus, Trash2, Check } from "lucide-react";
+import { ArrowLeft, Plus, Trash2, Check, HelpCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { TypeEmojiBar } from "@/components/TypeEmojiBar";
@@ -8,6 +8,12 @@ import { ShareSheet } from "@/components/ShareSheet";
 import { createPoll } from "@/lib/polls";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 type QuestionType = 
   | "single_choice" 
@@ -307,46 +313,68 @@ const CreatePoll = () => {
 
           {/* Advanced settings */}
           {showAdvanced && (
-            <div className="space-y-4 rounded-2xl border border-border bg-card/40 p-6 animate-slide-up">
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm">Results visibility</span>
-                  <select
-                    value={visibility}
-                    onChange={(e) => setVisibility(e.target.value as any)}
-                    className="rounded-xl border border-border bg-background px-3 py-2 text-sm"
-                  >
-                    <option value="public">Public</option>
-                    <option value="unlisted">Unlisted</option>
-                    <option value="voters">Voters only</option>
-                    <option value="private">Private</option>
-                  </select>
+            <TooltipProvider delayDuration={200}>
+              <div className="space-y-4 rounded-2xl border border-border bg-card/40 p-6 animate-slide-up">
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm">Results visibility</span>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <HelpCircle className="h-4 w-4 text-muted-foreground hover:text-primary cursor-help transition-colors" />
+                        </TooltipTrigger>
+                        <TooltipContent side="top" className="max-w-xs">
+                          <p className="text-sm">Controls who can see your poll results. Choose based on how private you want the data.</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </div>
+                    <select
+                      value={visibility}
+                      onChange={(e) => setVisibility(e.target.value as any)}
+                      className="rounded-xl border border-border bg-background px-3 py-2 text-sm"
+                    >
+                      <option value="public">Public</option>
+                      <option value="unlisted">Unlisted</option>
+                      <option value="voters">Voters only</option>
+                      <option value="private">Private</option>
+                    </select>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    {visibility === "public" && "🌍 Anyone can find and see results"}
+                    {visibility === "unlisted" && "🔗 Only people with the link can access"}
+                    {visibility === "voters" && "🗳️ Results visible only after voting"}
+                    {visibility === "private" && "🔒 Only you can see the results"}
+                  </p>
                 </div>
-                <p className="text-xs text-muted-foreground">
-                  {visibility === "public" && "Herkes anketi bulabilir ve sonuçları görebilir"}
-                  {visibility === "unlisted" && "Sadece linke sahip olanlar anketi ve sonuçları görebilir"}
-                  {visibility === "voters" && "Sadece oy verenler sonuçları görebilir"}
-                  {visibility === "private" && "Sadece sen sonuçları görebilirsin"}
-                </p>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm">Allow comments</span>
-                <button
-                  onClick={() => setAllowComments(!allowComments)}
-                  className={cn(
-                    "h-6 w-11 rounded-full transition-colors",
-                    allowComments ? "bg-primary" : "bg-muted"
-                  )}
-                >
-                  <div
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm">Allow comments</span>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <HelpCircle className="h-4 w-4 text-muted-foreground hover:text-primary cursor-help transition-colors" />
+                      </TooltipTrigger>
+                      <TooltipContent side="top" className="max-w-xs">
+                        <p className="text-sm">Let respondents leave comments after voting. Great for feedback!</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </div>
+                  <button
+                    onClick={() => setAllowComments(!allowComments)}
                     className={cn(
-                      "h-5 w-5 rounded-full bg-white transition-transform",
-                      allowComments ? "translate-x-5" : "translate-x-0.5"
+                      "h-6 w-11 rounded-full transition-colors",
+                      allowComments ? "bg-primary" : "bg-muted"
                     )}
-                  />
-                </button>
+                  >
+                    <div
+                      className={cn(
+                        "h-5 w-5 rounded-full bg-white transition-transform",
+                        allowComments ? "translate-x-5" : "translate-x-0.5"
+                      )}
+                    />
+                  </button>
+                </div>
               </div>
-            </div>
+            </TooltipProvider>
           )}
         </div>
       </main>
