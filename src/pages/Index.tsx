@@ -35,10 +35,7 @@ const Index = () => {
                 <span className="text-muted-foreground">anything</span>
               </h1>
               <p className="text-lg text-muted-foreground">
-                throw a question into the internet
-              </p>
-              <p className="text-lg text-muted-foreground">
-                ⚡ create a poll in 10 seconds
+                create a poll in 10 seconds
               </p>
             </div>
 
