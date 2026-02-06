@@ -248,11 +248,11 @@ const CreatePoll = () => {
             onClick={handlePublish}
             disabled={!canPublish || isSubmitting}
             className={cn(
-              "h-10 px-6 text-sm transition-all",
-              canPublish ? "btn-neon-green" : "btn-neon-yellow"
+              "h-10 w-28 text-sm transition-all",
+              canPublish ? "btn-neon-green" : "btn-neon-orange"
             )}
           >
-            {isSubmitting ? "..." : "Publish"}
+            {isSubmitting ? "..." : canPublish ? "Ready!" : "Not Ready!"}
           </Button>
         </div>
       </header>
