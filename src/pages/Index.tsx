@@ -96,51 +96,51 @@ const Index = () => {
                   <table className="w-full">
                     <thead>
                       <tr className="bg-muted/50">
-                        <th className="px-3 py-2 text-left font-medium text-muted-foreground">Feature</th>
+                        <th className="px-3 py-2 text-left font-medium text-muted-foreground">feature</th>
                         <th className="px-3 py-2 text-center">
                           <div className="flex items-center justify-center gap-1">
                             <UserX className="h-3 w-3 text-muted-foreground" />
-                            <span className="text-muted-foreground">Guest</span>
+                            <span className="text-muted-foreground">guest</span>
                           </div>
                         </th>
                         <th className="px-3 py-2 text-center">
                           <div className="flex items-center justify-center gap-1">
                             <UserCheck className="h-3 w-3 text-primary" />
-                            <span className="text-primary">Signed up</span>
+                            <span className="text-primary">member</span>
                           </div>
                         </th>
                       </tr>
                     </thead>
                     <tbody className="text-muted-foreground">
                       <tr className="border-t border-border/30">
-                        <td className="px-3 py-2">Create polls</td>
+                        <td className="px-3 py-2">create polls</td>
                         <td className="px-3 py-2 text-center">✅</td>
                         <td className="px-3 py-2 text-center">✅</td>
                       </tr>
                       <tr className="border-t border-border/30">
-                        <td className="px-3 py-2">Vote</td>
+                        <td className="px-3 py-2">vote</td>
                         <td className="px-3 py-2 text-center">✅</td>
                         <td className="px-3 py-2 text-center">✅</td>
                       </tr>
                       <tr className="border-t border-border/30">
-                        <td className="px-3 py-2">See results</td>
+                        <td className="px-3 py-2">see results</td>
                         <td className="px-3 py-2 text-center">✅</td>
                         <td className="px-3 py-2 text-center">✅</td>
                       </tr>
                       <tr className="border-t border-border/30">
-                        <td className="px-3 py-2">Manage polls</td>
-                        <td className="px-3 py-2 text-center text-muted-foreground/50">😢 if link is lost...</td>
+                        <td className="px-3 py-2">manage polls</td>
+                        <td className="px-3 py-2 text-center text-muted-foreground/50">😢 if link lost</td>
                         <td className="px-3 py-2 text-center">✅ all saved</td>
                       </tr>
                       <tr className="border-t border-border/30">
-                        <td className="px-3 py-2">Feel cool</td>
+                        <td className="px-3 py-2">feel cool</td>
                         <td className="px-3 py-2 text-center">😐 meh</td>
                         <td className="px-3 py-2 text-center">😎 yes</td>
                       </tr>
                       <tr className="border-t border-border/30 bg-primary/5">
-                        <td className="px-3 py-2 font-medium text-foreground">Price</td>
-                        <td className="px-3 py-2 text-center font-bold text-primary">🆓 FREE</td>
-                        <td className="px-3 py-2 text-center font-bold text-primary">🆓 FREE</td>
+                        <td className="px-3 py-2 font-medium text-foreground">price</td>
+                        <td className="px-3 py-2 text-center font-bold text-primary">🆓 free</td>
+                        <td className="px-3 py-2 text-center font-bold text-primary">🆓 free</td>
                       </tr>
                     </tbody>
                   </table>
