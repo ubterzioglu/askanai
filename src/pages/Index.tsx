@@ -66,8 +66,8 @@ const Index = () => {
         <div className="absolute bottom-6 left-6 z-10 hidden md:block max-w-xs animate-slide-up" style={{ animationDelay: '0.3s' }}>
           <Accordion type="single" collapsible className="space-y-2">
             {/* Where am I */}
-            <AccordionItem value="where" className="glass-card rounded-xl border-0 overflow-hidden border-l-2 border-l-orange-400 bg-orange-500/20">
-              <AccordionTrigger className="px-4 py-3 text-sm font-medium hover:no-underline text-orange-100">
+            <AccordionItem value="where" className="glass-card rounded-xl border-0 overflow-hidden border-l-2 border-l-primary bg-primary/20">
+              <AccordionTrigger className="px-4 py-3 text-sm font-medium hover:no-underline text-primary">
                 {t('landing.whereAmI.title')}
               </AccordionTrigger>
               <AccordionContent className="px-4 pb-3">
@@ -80,50 +80,50 @@ const Index = () => {
             </AccordionItem>
 
             {/* Why sign up */}
-            <AccordionItem value="why" className="glass-card rounded-xl border-0 overflow-hidden border-l-2 border-l-orange-400 bg-orange-500/20">
-              <AccordionTrigger className="px-4 py-3 text-sm font-medium hover:no-underline text-orange-100">
+            <AccordionItem value="why" className="glass-card rounded-xl border-0 overflow-hidden border-l-2 border-l-primary bg-primary/20">
+              <AccordionTrigger className="px-4 py-3 text-sm font-medium hover:no-underline text-primary">
                 {t('landing.whySignup.title')}
               </AccordionTrigger>
               <AccordionContent className="px-4 pb-3">
                 <div className="text-xs">
-                  <table className="w-full">
+                  <table className="w-full border-collapse">
                     <thead>
                       <tr className="text-muted-foreground">
-                        <th className="text-left font-normal pb-1">{t('landing.whySignup.feature')}</th>
-                        <th className="text-center font-normal pb-1">{t('landing.whySignup.guest')}</th>
-                        <th className="text-center font-normal pb-1">{t('landing.whySignup.member')}</th>
+                        <th className="text-left font-normal pb-1 pr-2">{t('landing.whySignup.feature')}</th>
+                        <th className="text-center font-normal pb-1 px-2 border-l border-white/20">{t('landing.whySignup.guest')}</th>
+                        <th className="text-center font-normal pb-1 pl-2 border-l border-white/20">{t('landing.whySignup.member')}</th>
                       </tr>
                     </thead>
                     <tbody className="text-muted-foreground">
                       <tr>
-                        <td className="py-0.5">{t('landing.whySignup.createPolls')}</td>
-                        <td className="text-center">✅</td>
-                        <td className="text-center">✅</td>
+                        <td className="py-0.5 pr-2">{t('landing.whySignup.createPolls')}</td>
+                        <td className="text-center px-2 border-l border-white/20">✅</td>
+                        <td className="text-center pl-2 border-l border-white/20">✅</td>
                       </tr>
                       <tr>
-                        <td className="py-0.5">{t('landing.whySignup.vote')}</td>
-                        <td className="text-center">✅</td>
-                        <td className="text-center">✅</td>
+                        <td className="py-0.5 pr-2">{t('landing.whySignup.vote')}</td>
+                        <td className="text-center px-2 border-l border-white/20">✅</td>
+                        <td className="text-center pl-2 border-l border-white/20">✅</td>
                       </tr>
                       <tr>
-                        <td className="py-0.5">{t('landing.whySignup.seeResults')}</td>
-                        <td className="text-center">✅</td>
-                        <td className="text-center">✅</td>
+                        <td className="py-0.5 pr-2">{t('landing.whySignup.seeResults')}</td>
+                        <td className="text-center px-2 border-l border-white/20">✅</td>
+                        <td className="text-center pl-2 border-l border-white/20">✅</td>
                       </tr>
                       <tr>
-                        <td className="py-0.5">{t('landing.whySignup.managePolls')}</td>
-                        <td className="text-center text-xs">{t('landing.whySignup.ifLinkLost')}</td>
-                        <td className="text-center text-xs">{t('landing.whySignup.allSaved')}</td>
+                        <td className="py-0.5 pr-2">{t('landing.whySignup.managePolls')}</td>
+                        <td className="text-center text-xs px-2 border-l border-white/20">{t('landing.whySignup.ifLinkLost')}</td>
+                        <td className="text-center text-xs pl-2 border-l border-white/20">{t('landing.whySignup.allSaved')}</td>
                       </tr>
                       <tr>
-                        <td className="py-0.5">{t('landing.whySignup.feelCool')}</td>
-                        <td className="text-center">{t('landing.whySignup.meh')}</td>
-                        <td className="text-center">{t('landing.whySignup.yes')}</td>
+                        <td className="py-0.5 pr-2">{t('landing.whySignup.feelCool')}</td>
+                        <td className="text-center px-2 border-l border-white/20">{t('landing.whySignup.meh')}</td>
+                        <td className="text-center pl-2 border-l border-white/20">{t('landing.whySignup.yes')}</td>
                       </tr>
                       <tr>
-                        <td className="py-0.5">{t('landing.whySignup.price')}</td>
-                        <td className="text-center">{t('landing.whySignup.free')}</td>
-                        <td className="text-center">{t('landing.whySignup.free')}</td>
+                        <td className="py-0.5 pr-2">{t('landing.whySignup.price')}</td>
+                        <td className="text-center px-2 border-l border-white/20">{t('landing.whySignup.free')}</td>
+                        <td className="text-center pl-2 border-l border-white/20">{t('landing.whySignup.free')}</td>
                       </tr>
                     </tbody>
                   </table>
