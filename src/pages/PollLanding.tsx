@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getPollWithQuestions } from "@/lib/polls";
 import { useQuery } from "@tanstack/react-query";
@@ -98,9 +98,16 @@ const PollLanding = () => {
     <div className="flex min-h-screen flex-col bg-background">
       {/* Header */}
       <header className="flex items-center justify-between p-4">
-        <Link to="/" className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-primary">
-            <span className="font-display text-sm font-bold text-primary-foreground">A</span>
+        <Link to="/" className="group">
+          <div className="relative flex h-12 w-12 items-center justify-center">
+            {/* Outer glow */}
+            <div className="absolute inset-0 rounded-full bg-primary/20 blur-lg transition-all duration-500 group-hover:bg-primary/40 group-hover:blur-xl" />
+            {/* Pulsing ring */}
+            <div className="absolute inset-1 rounded-full border border-primary/30 animate-pulse" />
+            {/* Core */}
+            <div className="relative flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary/60 shadow-[0_0_15px_hsl(201,99%,47%,0.4)] transition-all duration-300 group-hover:scale-110 group-hover:shadow-[0_0_25px_hsl(201,99%,47%,0.6)]">
+              <Home className="h-4 w-4 text-primary-foreground" />
+            </div>
           </div>
         </Link>
         {isClosed && (
