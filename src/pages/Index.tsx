@@ -69,16 +69,10 @@ const Index = () => {
               <ChevronDown className={cn("h-4 w-4 transition-transform", showWhereAmI && "rotate-180")} />
             </button>
             {showWhereAmI && (
-              <div className="px-4 pb-4 text-sm text-muted-foreground space-y-2 animate-in slide-in-from-top-2">
-                <p>
-                  🎯 <strong>ASKANAI</strong> - create polls, share them, see results.
-                </p>
-                <p>
-                  📱 Swipe like Tinder, fast like TikTok. Ask, share the link, done!
-                </p>
-                <p className="text-primary font-medium">
-                  ✨ 100% free, no signup required.
-                </p>
+              <div className="px-4 pb-4 text-sm text-muted-foreground space-y-1 animate-in slide-in-from-top-2">
+                <p>🎯 create polls, share, see results</p>
+                <p>📱 swipe to vote, fast & fun</p>
+                <p className="text-primary font-medium">✨ 100% free, no signup</p>
               </div>
             )}
           </div>
