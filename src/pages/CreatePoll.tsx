@@ -1,11 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
-import { ArrowLeft, Plus, Trash2, Check, HelpCircle } from "lucide-react";
+import { ArrowLeft, Plus, Trash2, Check, HelpCircle, ImagePlus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { TypeEmojiBar } from "@/components/TypeEmojiBar";
 import { ShareSheet } from "@/components/ShareSheet";
 import { createPoll } from "@/lib/polls";
+import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import {
@@ -35,6 +36,7 @@ const CreatePoll = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const initialQuestion = location.state?.initialQuestion || "";
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [questions, setQuestions] = useState<Question[]>([
     {
@@ -52,8 +54,76 @@ const CreatePoll = () => {
   const [showShareSheet, setShowShareSheet] = useState(false);
   const [createdPollUrl, setCreatedPollUrl] = useState("");
   const [createdPollTitle, setCreatedPollTitle] = useState("");
+  const [previewImage, setPreviewImage] = useState<File | null>(null);
+  const [previewImageUrl, setPreviewImageUrl] = useState<string | null>(null);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
 
   const currentQuestion = questions[currentQuestionIndex];
+
+  const handleImageSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please select an image file');
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('Image must be less than 5MB');
+      return;
+    }
+
+    setPreviewImage(file);
+    // Create local preview
+    const localUrl = URL.createObjectURL(file);
+    setPreviewImageUrl(localUrl);
+  };
+
+  const uploadPreviewImage = async (): Promise<string | null> => {
+    if (!previewImage) return null;
+
+    setIsUploadingImage(true);
+    try {
+      const fileExt = previewImage.name.split('.').pop();
+      const fileName = `${crypto.randomUUID()}.${fileExt}`;
+      const filePath = `previews/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('poll-images')
+        .upload(filePath, previewImage);
+
+      if (uploadError) {
+        console.error('Upload error:', uploadError);
+        toast.error('Failed to upload image');
+        return null;
+      }
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('poll-images')
+        .getPublicUrl(filePath);
+
+      return publicUrl;
+    } catch (error) {
+      console.error('Upload error:', error);
+      return null;
+    } finally {
+      setIsUploadingImage(false);
+    }
+  };
+
+  const removePreviewImage = () => {
+    setPreviewImage(null);
+    if (previewImageUrl) {
+      URL.revokeObjectURL(previewImageUrl);
+    }
+    setPreviewImageUrl(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
 
   const updateCurrentQuestion = (updates: Partial<Question>) => {
     setQuestions((prev) =>
@@ -106,6 +176,12 @@ const CreatePoll = () => {
 
     setIsSubmitting(true);
     try {
+      // Upload preview image if selected
+      let uploadedImageUrl: string | null = null;
+      if (previewImage) {
+        uploadedImageUrl = await uploadPreviewImage();
+      }
+
       const result = await createPoll(
         questions[0].prompt, // Use first question as title
         null,
@@ -115,7 +191,7 @@ const CreatePoll = () => {
           options: q.options.filter((o) => o.trim()),
           isRequired: true,
         })),
-        { visibility, allowComments }
+        { visibility, allowComments, previewImageUrl: uploadedImageUrl }
       );
 
       if (result) {
@@ -372,6 +448,56 @@ const CreatePoll = () => {
                       )}
                     />
                   </button>
+                </div>
+
+                {/* Preview Image Upload */}
+                <div className="space-y-2 pt-2 border-t border-border/50">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm">Share preview image</span>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <HelpCircle className="h-4 w-4 text-muted-foreground hover:text-primary cursor-help transition-colors" />
+                      </TooltipTrigger>
+                      <TooltipContent side="top" className="max-w-xs">
+                        <p className="text-sm">This image appears when you share your poll on social media (Twitter, Facebook, etc.)</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </div>
+                  
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageSelect}
+                    className="hidden"
+                  />
+                  
+                  {previewImageUrl ? (
+                    <div className="relative rounded-xl overflow-hidden border border-border">
+                      <img 
+                        src={previewImageUrl} 
+                        alt="Preview" 
+                        className="w-full h-32 object-cover"
+                      />
+                      <button
+                        onClick={removePreviewImage}
+                        className="absolute top-2 right-2 p-1.5 rounded-full bg-background/80 hover:bg-destructive hover:text-destructive-foreground transition-colors"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => fileInputRef.current?.click()}
+                      className="w-full flex items-center justify-center gap-2 py-4 rounded-xl border border-dashed border-border hover:border-primary/50 hover:text-primary transition-colors text-muted-foreground"
+                    >
+                      <ImagePlus className="h-5 w-5" />
+                      <span className="text-sm">Choose image</span>
+                    </button>
+                  )}
+                  <p className="text-xs text-muted-foreground">
+                    📸 Recommended: 1200×630px (social media standard)
+                  </p>
                 </div>
               </div>
             </TooltipProvider>

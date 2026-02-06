@@ -149,6 +149,7 @@ export type Database = {
           description: string | null
           id: string
           open_until: string | null
+          preview_image_url: string | null
           slug: string
           status: Database["public"]["Enums"]["poll_status"]
           title: string
@@ -164,6 +165,7 @@ export type Database = {
           description?: string | null
           id?: string
           open_until?: string | null
+          preview_image_url?: string | null
           slug: string
           status?: Database["public"]["Enums"]["poll_status"]
           title: string
@@ -179,6 +181,7 @@ export type Database = {
           description?: string | null
           id?: string
           open_until?: string | null
+          preview_image_url?: string | null
           slug?: string
           status?: Database["public"]["Enums"]["poll_status"]
           title?: string
