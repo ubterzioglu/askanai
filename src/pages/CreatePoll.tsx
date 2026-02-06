@@ -165,11 +165,11 @@ const CreatePoll = () => {
   const needsOptions = (type: QuestionType) =>
     ["single_choice", "multiple_choice", "ranking"].includes(type);
 
-  const canPublish = questions.every(
-    (q) =>
-      q.prompt.trim() &&
-      (!needsOptions(q.type) || q.options.filter((o) => o.trim()).length >= 2)
-  );
+  const isQuestionComplete = (q: Question) =>
+    q.prompt.trim() &&
+    (!needsOptions(q.type) || q.options.filter((o) => o.trim()).length >= 2);
+
+  const canPublish = questions.every(isQuestionComplete);
 
   const handlePublish = async () => {
     if (!canPublish) return;
@@ -247,7 +247,10 @@ const CreatePoll = () => {
           <Button
             onClick={handlePublish}
             disabled={!canPublish || isSubmitting}
-            className="btn-neon h-10 px-6 text-sm"
+            className={cn(
+              "h-10 px-6 text-sm transition-all",
+              canPublish ? "btn-neon-green" : "btn-neon-yellow"
+            )}
           >
             {isSubmitting ? "..." : "Publish"}
           </Button>
@@ -356,20 +359,29 @@ const CreatePoll = () => {
           {questions.length > 1 && (
             <div className="flex flex-col items-center gap-3">
               <div className="flex items-center justify-center gap-2">
-                {questions.map((_, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setCurrentQuestionIndex(i)}
-                    className={cn(
-                      "flex h-9 w-9 items-center justify-center rounded-full text-sm font-medium transition-all",
-                      i === currentQuestionIndex
-                        ? "bg-primary text-primary-foreground shadow-[0_0_15px_hsl(var(--primary)/0.5)] scale-110"
-                        : "bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground border border-border/50"
-                    )}
-                  >
-                    {i + 1}
-                  </button>
-                ))}
+                {questions.map((q, i) => {
+                  const complete = isQuestionComplete(q);
+                  const isActive = i === currentQuestionIndex;
+                  return (
+                    <button
+                      key={i}
+                      onClick={() => setCurrentQuestionIndex(i)}
+                      className={cn(
+                        "flex h-9 w-9 items-center justify-center rounded-full text-sm font-medium transition-all",
+                        isActive && "scale-110",
+                        complete
+                          ? isActive
+                            ? "bg-[hsl(var(--accent))] text-[hsl(var(--accent-foreground))] shadow-[0_0_15px_hsl(var(--accent)/0.5)]"
+                            : "bg-[hsl(var(--accent)/0.3)] text-[hsl(var(--accent))] border border-[hsl(var(--accent)/0.5)]"
+                          : isActive
+                            ? "bg-[hsl(var(--warning))] text-[hsl(var(--warning-foreground))] shadow-[0_0_15px_hsl(var(--warning)/0.5)]"
+                            : "bg-[hsl(var(--warning)/0.3)] text-[hsl(var(--warning))] border border-[hsl(var(--warning)/0.5)]"
+                      )}
+                    >
+                      {i + 1}
+                    </button>
+                  );
+                })}
               </div>
               {/* Remove question button */}
               {questions.length > 1 && (
