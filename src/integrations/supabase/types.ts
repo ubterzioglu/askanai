@@ -306,6 +306,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "tickets_comment_id_fkey"
+            columns: ["comment_id"]
+            isOneToOne: false
+            referencedRelation: "comments_public"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "tickets_poll_id_fkey"
             columns: ["poll_id"]
             isOneToOne: false
@@ -337,6 +344,44 @@ export type Database = {
       }
     }
     Views: {
+      comments_public: {
+        Row: {
+          body: string | null
+          created_at: string | null
+          display_name: string | null
+          id: string | null
+          poll_id: string | null
+          status: Database["public"]["Enums"]["comment_status"] | null
+          user_id: string | null
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string | null
+          display_name?: string | null
+          id?: string | null
+          poll_id?: string | null
+          status?: Database["public"]["Enums"]["comment_status"] | null
+          user_id?: string | null
+        }
+        Update: {
+          body?: string | null
+          created_at?: string | null
+          display_name?: string | null
+          id?: string | null
+          poll_id?: string | null
+          status?: Database["public"]["Enums"]["comment_status"] | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "comments_poll_id_fkey"
+            columns: ["poll_id"]
+            isOneToOne: false
+            referencedRelation: "polls"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       responses_public: {
         Row: {
           created_at: string | null
