@@ -496,7 +496,7 @@ const CreatePoll = () => {
                     </button>
                   )}
                   <p className="text-xs text-muted-foreground">
-                    📸 Recommended: 1200×630px (social media standard)
+                    📸 Recommended: 1080×1080px (square works best!)
                   </p>
                 </div>
               </div>
