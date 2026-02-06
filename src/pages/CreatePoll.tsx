@@ -357,46 +357,30 @@ const CreatePoll = () => {
 
           {/* Multiple questions nav */}
           {questions.length > 1 && (
-            <div className="flex flex-col items-center gap-3">
-              <div className="flex items-center justify-center gap-2">
-                {questions.map((q, i) => {
-                  const complete = isQuestionComplete(q);
-                  const isActive = i === currentQuestionIndex;
-                  return (
-                    <button
-                      key={i}
-                      onClick={() => setCurrentQuestionIndex(i)}
-                      className={cn(
-                        "flex h-9 w-9 items-center justify-center rounded-full text-sm font-medium transition-all",
-                        isActive && "scale-110",
-                        complete
-                          ? isActive
-                            ? "bg-[hsl(var(--accent))] text-[hsl(var(--accent-foreground))] shadow-[0_0_15px_hsl(var(--accent)/0.5)]"
-                            : "bg-[hsl(var(--accent)/0.3)] text-[hsl(var(--accent))] border border-[hsl(var(--accent)/0.5)]"
-                          : isActive
-                            ? "bg-[hsl(var(--warning))] text-[hsl(var(--warning-foreground))] shadow-[0_0_15px_hsl(var(--warning)/0.5)]"
-                            : "bg-[hsl(var(--warning)/0.3)] text-[hsl(var(--warning))] border border-[hsl(var(--warning)/0.5)]"
-                      )}
-                    >
-                      {i + 1}
-                    </button>
-                  );
-                })}
-              </div>
-              {/* Remove question button */}
-              {questions.length > 1 && (
-                <button
-                  onClick={() => {
-                    const newQuestions = questions.filter((_, i) => i !== currentQuestionIndex);
-                    setQuestions(newQuestions);
-                    setCurrentQuestionIndex(Math.min(currentQuestionIndex, newQuestions.length - 1));
-                  }}
-                  className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-destructive transition-colors"
-                >
-                  <Trash2 className="h-3.5 w-3.5" />
-                  <span>remove this question</span>
-                </button>
-              )}
+            <div className="flex items-center justify-center gap-2">
+              {questions.map((q, i) => {
+                const complete = isQuestionComplete(q);
+                const isActive = i === currentQuestionIndex;
+                return (
+                  <button
+                    key={i}
+                    onClick={() => setCurrentQuestionIndex(i)}
+                    className={cn(
+                      "flex h-9 w-9 items-center justify-center rounded-full text-sm font-medium transition-all",
+                      isActive && "scale-110",
+                      complete
+                        ? isActive
+                          ? "bg-[hsl(var(--accent))] text-[hsl(var(--accent-foreground))] shadow-[0_0_15px_hsl(var(--accent)/0.5)]"
+                          : "bg-[hsl(var(--accent)/0.3)] text-[hsl(var(--accent))] border border-[hsl(var(--accent)/0.5)]"
+                        : isActive
+                          ? "bg-[hsl(var(--warning))] text-[hsl(var(--warning-foreground))] shadow-[0_0_15px_hsl(var(--warning)/0.5)]"
+                          : "bg-[hsl(var(--warning)/0.3)] text-[hsl(var(--warning))] border border-[hsl(var(--warning)/0.5)]"
+                    )}
+                  >
+                    {i + 1}
+                  </button>
+                );
+              })}
             </div>
           )}
 
@@ -408,6 +392,23 @@ const CreatePoll = () => {
             <Plus className="inline h-5 w-5 mr-2" />
             add question
           </button>
+
+          {/* Remove question button - pill style */}
+          {questions.length > 1 && (
+            <div className="flex justify-center">
+              <button
+                onClick={() => {
+                  const newQuestions = questions.filter((_, i) => i !== currentQuestionIndex);
+                  setQuestions(newQuestions);
+                  setCurrentQuestionIndex(Math.min(currentQuestionIndex, newQuestions.length - 1));
+                }}
+                className="flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs text-muted-foreground border border-border/50 hover:border-destructive/50 hover:text-destructive hover:bg-destructive/10 transition-all"
+              >
+                <Trash2 className="h-3 w-3" />
+                <span>remove this question</span>
+              </button>
+            </div>
+          )}
 
           {/* Advanced toggle */}
           <button
