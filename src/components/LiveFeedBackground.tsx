@@ -51,12 +51,12 @@ export const LiveFeedBackground = () => {
 
   return (
     <div className="pointer-events-none fixed inset-0 overflow-hidden">
-      {/* Left column - more faded on mobile */}
+      {/* Left column - top */}
       <div 
         className="absolute left-[5%] top-0 flex w-72 flex-col gap-4 animate-float opacity-[0.08] md:opacity-20" 
         style={{ animationDelay: "0s" }}
       >
-        {polls.slice(0, 4).map((poll, i) => (
+        {polls.slice(0, 3).map((poll, i) => (
           <div
             key={poll.id}
             className={cn(
@@ -77,12 +77,12 @@ export const LiveFeedBackground = () => {
         ))}
       </div>
 
-      {/* Right column - more faded on mobile */}
+      {/* Right column - top */}
       <div 
         className="absolute right-[5%] top-20 flex w-72 flex-col gap-4 animate-float opacity-[0.08] md:opacity-20" 
         style={{ animationDelay: "1s" }}
       >
-        {polls.slice(4, 8).map((poll, i) => (
+        {polls.slice(3, 6).map((poll, i) => (
           <div
             key={poll.id}
             className={cn(
@@ -90,7 +90,7 @@ export const LiveFeedBackground = () => {
               colorClasses[poll.color]
             )}
             style={{ 
-              animationDelay: `${(i + 4) * 0.5}s`,
+              animationDelay: `${(i + 3) * 0.5}s`,
               transform: `translateY(${i * 20}px)`,
             }}
           >
@@ -103,9 +103,62 @@ export const LiveFeedBackground = () => {
         ))}
       </div>
 
-      {/* Floating orbs */}
-      <div className="absolute left-1/4 top-1/3 h-64 w-64 rounded-full bg-primary/5 blur-3xl" />
-      <div className="absolute right-1/4 bottom-1/3 h-48 w-48 rounded-full bg-accent/5 blur-3xl" />
+      {/* Left column - bottom */}
+      <div 
+        className="absolute left-[8%] bottom-20 flex w-64 flex-col gap-4 animate-float opacity-[0.06] md:opacity-15" 
+        style={{ animationDelay: "2s" }}
+      >
+        {polls.slice(6, 8).map((poll, i) => (
+          <div
+            key={poll.id}
+            className={cn(
+              "feed-card border",
+              colorClasses[poll.color]
+            )}
+            style={{ 
+              animationDelay: `${(i + 6) * 0.5}s`,
+            }}
+          >
+            <div className="flex items-center gap-2 mb-2">
+              <div className={cn("h-2 w-2 rounded-full", dotColors[poll.color])} />
+              <span className="text-xs text-muted-foreground">{poll.votes} votes</span>
+            </div>
+            <p className="text-sm font-medium truncate">{poll.question}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* Right column - bottom */}
+      <div 
+        className="absolute right-[8%] bottom-32 flex w-64 flex-col gap-4 animate-float opacity-[0.06] md:opacity-15" 
+        style={{ animationDelay: "1.5s" }}
+      >
+        {polls.slice(0, 2).map((poll, i) => (
+          <div
+            key={`bottom-${poll.id}`}
+            className={cn(
+              "feed-card border",
+              colorClasses[poll.color]
+            )}
+            style={{ 
+              animationDelay: `${(i + 8) * 0.5}s`,
+            }}
+          >
+            <div className="flex items-center gap-2 mb-2">
+              <div className={cn("h-2 w-2 rounded-full", dotColors[poll.color])} />
+              <span className="text-xs text-muted-foreground">{poll.votes} votes</span>
+            </div>
+            <p className="text-sm font-medium truncate">{poll.question}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* Floating orbs - distributed across entire screen */}
+      <div className="absolute left-1/4 top-1/4 h-64 w-64 rounded-full bg-primary/5 blur-3xl" />
+      <div className="absolute right-1/4 top-1/3 h-48 w-48 rounded-full bg-accent/5 blur-3xl" />
+      <div className="absolute left-1/3 bottom-1/4 h-56 w-56 rounded-full bg-warning/5 blur-3xl" />
+      <div className="absolute right-1/3 bottom-1/3 h-52 w-52 rounded-full bg-destructive/5 blur-3xl" />
+      <div className="absolute left-1/2 bottom-10 h-40 w-40 rounded-full bg-primary/3 blur-3xl" />
     </div>
   );
 };
