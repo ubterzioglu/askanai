@@ -370,10 +370,10 @@ export const getPollResults = async (pollId: string) => {
   };
 };
 
-// Get comments - excludes fingerprint for privacy
+// Get comments - uses comments_public view to hide fingerprint data
 export const getComments = async (pollId: string): Promise<Comment[]> => {
   const { data, error } = await supabase
-    .from('comments')
+    .from('comments_public')
     .select('id, poll_id, display_name, body, user_id, status, created_at')
     .eq('poll_id', pollId)
     .eq('status', 'visible')
