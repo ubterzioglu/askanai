@@ -81,13 +81,13 @@ const Index = () => {
             {showWhereAmI && (
               <div className="px-4 pb-4 text-sm text-muted-foreground space-y-2 animate-in slide-in-from-top-2">
                 <p>
-                  🎯 <strong>ASKANAI</strong> - anket oluştur, paylaş, sonuçları gör.
+                  🎯 <strong>ASKANAI</strong> - create polls, share them, see results.
                 </p>
                 <p>
-                  📱 Tinder gibi kaydır, TikTok gibi hızlı. Sorunu sor, linki at, bitti!
+                  📱 Swipe like Tinder, fast like TikTok. Ask, share the link, done!
                 </p>
                 <p className="text-primary font-medium">
-                  ✨ %100 ücretsiz, kayıt bile şart değil.
+                  ✨ 100% free, no signup required.
                 </p>
               </div>
             )}
@@ -101,7 +101,7 @@ const Index = () => {
             >
               <div className="flex items-center gap-2">
                 <Sparkles className="h-4 w-4 text-primary" />
-                <span>kayıtlı vs kayıtsız 🤔</span>
+                <span>signed up vs guest 🤔</span>
               </div>
               <ChevronDown className={cn("h-4 w-4 transition-transform", showComparison && "rotate-180")} />
             </button>
@@ -111,49 +111,49 @@ const Index = () => {
                   <table className="w-full">
                     <thead>
                       <tr className="bg-muted/50">
-                        <th className="px-3 py-2 text-left font-medium text-muted-foreground">Özellik</th>
+                        <th className="px-3 py-2 text-left font-medium text-muted-foreground">Feature</th>
                         <th className="px-3 py-2 text-center">
                           <div className="flex items-center justify-center gap-1">
                             <UserX className="h-3 w-3 text-muted-foreground" />
-                            <span className="text-muted-foreground">Kayıtsız</span>
+                            <span className="text-muted-foreground">Guest</span>
                           </div>
                         </th>
                         <th className="px-3 py-2 text-center">
                           <div className="flex items-center justify-center gap-1">
                             <UserCheck className="h-3 w-3 text-primary" />
-                            <span className="text-primary">Kayıtlı</span>
+                            <span className="text-primary">Signed up</span>
                           </div>
                         </th>
                       </tr>
                     </thead>
                     <tbody className="text-muted-foreground">
                       <tr className="border-t border-border/30">
-                        <td className="px-3 py-2">Anket oluştur</td>
+                        <td className="px-3 py-2">Create polls</td>
                         <td className="px-3 py-2 text-center">✅</td>
                         <td className="px-3 py-2 text-center">✅</td>
                       </tr>
                       <tr className="border-t border-border/30">
-                        <td className="px-3 py-2">Oy ver</td>
+                        <td className="px-3 py-2">Vote</td>
                         <td className="px-3 py-2 text-center">✅</td>
                         <td className="px-3 py-2 text-center">✅</td>
                       </tr>
                       <tr className="border-t border-border/30">
-                        <td className="px-3 py-2">Sonuçları gör</td>
+                        <td className="px-3 py-2">See results</td>
                         <td className="px-3 py-2 text-center">✅</td>
                         <td className="px-3 py-2 text-center">✅</td>
                       </tr>
                       <tr className="border-t border-border/30">
-                        <td className="px-3 py-2">Anketlerini yönet</td>
-                        <td className="px-3 py-2 text-center text-muted-foreground/50">😢 link kaybolursa...</td>
-                        <td className="px-3 py-2 text-center">✅ hepsi burada</td>
+                        <td className="px-3 py-2">Manage polls</td>
+                        <td className="px-3 py-2 text-center text-muted-foreground/50">😢 if link is lost...</td>
+                        <td className="px-3 py-2 text-center">✅ all saved</td>
                       </tr>
                       <tr className="border-t border-border/30">
-                        <td className="px-3 py-2">Havalı hisset</td>
-                        <td className="px-3 py-2 text-center">😐 eh</td>
-                        <td className="px-3 py-2 text-center">😎 evet</td>
+                        <td className="px-3 py-2">Feel cool</td>
+                        <td className="px-3 py-2 text-center">😐 meh</td>
+                        <td className="px-3 py-2 text-center">😎 yes</td>
                       </tr>
                       <tr className="border-t border-border/30 bg-primary/5">
-                        <td className="px-3 py-2 font-medium text-foreground">Fiyat</td>
+                        <td className="px-3 py-2 font-medium text-foreground">Price</td>
                         <td className="px-3 py-2 text-center font-bold text-primary">🆓 FREE</td>
                         <td className="px-3 py-2 text-center font-bold text-primary">🆓 FREE</td>
                       </tr>
@@ -161,7 +161,7 @@ const Index = () => {
                   </table>
                 </div>
                 <p className="mt-2 text-center text-xs text-muted-foreground">
-                  💡 ikisi de ücretsiz, kayıt sadece 10 saniye
+                  💡 both are free, signup takes just 10 seconds
                 </p>
               </div>
             )}
