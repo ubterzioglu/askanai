@@ -336,10 +336,10 @@ export const submitResponse = async (
   return response as Response;
 };
 
-// Get poll results
+// Get poll results - uses responses_public view to hide fingerprint data
 export const getPollResults = async (pollId: string) => {
   const { data: responses, error: responsesError } = await supabase
-    .from('responses')
+    .from('responses_public')
     .select('id')
     .eq('poll_id', pollId);
 

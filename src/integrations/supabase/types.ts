@@ -57,6 +57,13 @@ export type Database = {
             referencedRelation: "responses"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "answers_response_id_fkey"
+            columns: ["response_id"]
+            isOneToOne: false
+            referencedRelation: "responses_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
       comments: {
@@ -330,7 +337,38 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      responses_public: {
+        Row: {
+          created_at: string | null
+          id: string | null
+          poll_id: string | null
+          respondent_name: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string | null
+          poll_id?: string | null
+          respondent_name?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string | null
+          poll_id?: string | null
+          respondent_name?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "responses_poll_id_fkey"
+            columns: ["poll_id"]
+            isOneToOne: false
+            referencedRelation: "polls"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       generate_poll_slug: { Args: never; Returns: string }
