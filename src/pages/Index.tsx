@@ -159,13 +159,21 @@ const Index = () => {
           </div>
         </div>
 
-        {/* Home button - bottom left */}
+        {/* Neon pulse home button - bottom left */}
         <button 
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           className="fixed bottom-6 left-6 z-30 group"
         >
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 border border-primary/30 backdrop-blur-sm transition-all duration-300 group-hover:bg-primary group-hover:scale-110 group-hover:shadow-[0_0_30px_hsl(201,99%,47%,0.4)]">
-            <span className="text-2xl transition-transform duration-300 group-hover:scale-110">🏠</span>
+          <div className="relative flex h-14 w-14 items-center justify-center">
+            {/* Outer glow ring */}
+            <div className="absolute inset-0 rounded-full bg-primary/20 blur-xl transition-all duration-500 group-hover:bg-primary/40 group-hover:blur-2xl" />
+            {/* Pulsing rings */}
+            <div className="absolute inset-1 rounded-full border border-primary/30 animate-ping opacity-20" />
+            <div className="absolute inset-2 rounded-full border border-primary/50 animate-pulse" />
+            {/* Core button */}
+            <div className="relative flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary/60 shadow-[0_0_20px_hsl(201,99%,47%,0.5)] transition-all duration-300 group-hover:scale-110 group-hover:shadow-[0_0_40px_hsl(201,99%,47%,0.7)]">
+              <span className="text-primary-foreground font-bold text-lg">?</span>
+            </div>
           </div>
         </button>
       </div>
