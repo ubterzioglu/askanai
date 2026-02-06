@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -16,6 +17,55 @@ const PollLanding = () => {
 
   const poll = pollData?.poll;
   const questions = pollData?.questions || [];
+
+  // Update OG meta tags when poll data loads
+  useEffect(() => {
+    if (!poll) return;
+
+    // Update title
+    document.title = `${poll.title} | ASKANAI`;
+
+    // Update or create OG meta tags
+    const updateMetaTag = (property: string, content: string) => {
+      let meta = document.querySelector(`meta[property="${property}"]`) as HTMLMetaElement;
+      if (!meta) {
+        meta = document.createElement('meta');
+        meta.setAttribute('property', property);
+        document.head.appendChild(meta);
+      }
+      meta.content = content;
+    };
+
+    updateMetaTag('og:title', poll.title);
+    updateMetaTag('og:description', poll.description || 'Vote now on ASKANAI');
+    updateMetaTag('og:type', 'website');
+    
+    if (poll.preview_image_url) {
+      updateMetaTag('og:image', poll.preview_image_url);
+    }
+
+    // Twitter cards
+    const updateTwitterMeta = (name: string, content: string) => {
+      let meta = document.querySelector(`meta[name="${name}"]`) as HTMLMetaElement;
+      if (!meta) {
+        meta = document.createElement('meta');
+        meta.setAttribute('name', name);
+        document.head.appendChild(meta);
+      }
+      meta.content = content;
+    };
+
+    updateTwitterMeta('twitter:title', poll.title);
+    updateTwitterMeta('twitter:description', poll.description || 'Vote now on ASKANAI');
+    if (poll.preview_image_url) {
+      updateTwitterMeta('twitter:image', poll.preview_image_url);
+    }
+
+    // Cleanup on unmount - restore defaults
+    return () => {
+      document.title = 'ASKANAI - Ask Anything';
+    };
+  }, [poll]);
 
   const startPoll = () => {
     navigate(`/p/${slug}/q/1`);

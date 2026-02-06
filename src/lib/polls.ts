@@ -13,6 +13,7 @@ export interface Poll {
   close_after_responses: number | null;
   visibility_mode: 'public' | 'unlisted' | 'voters' | 'private';
   allow_comments: boolean;
+  preview_image_url: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -116,6 +117,7 @@ export const createPoll = async (
   settings: {
     visibility: Poll['visibility_mode'];
     allowComments: boolean;
+    previewImageUrl?: string | null;
   }
 ): Promise<{ poll: Poll; creatorKey: string } | null> => {
   // Generate unique slug
@@ -149,6 +151,7 @@ export const createPoll = async (
       creator_key_hash: creatorKeyHash,
       visibility_mode: settings.visibility,
       allow_comments: settings.allowComments,
+      preview_image_url: settings.previewImageUrl || null,
     })
     .select()
     .single();
