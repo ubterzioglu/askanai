@@ -50,9 +50,9 @@ export const LiveFeedBackground = () => {
   }, []);
 
   return (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden opacity-20">
-      {/* Left column */}
-      <div className="absolute left-[5%] top-0 flex w-72 flex-col gap-4 animate-float" style={{ animationDelay: "0s" }}>
+    <div className="pointer-events-none absolute inset-0 overflow-hidden">
+      {/* Left column - hidden on mobile */}
+      <div className="absolute left-[5%] top-0 hidden w-72 flex-col gap-4 opacity-20 animate-float md:flex" style={{ animationDelay: "0s" }}>
         {polls.slice(0, 4).map((poll, i) => (
           <div
             key={poll.id}
@@ -74,8 +74,8 @@ export const LiveFeedBackground = () => {
         ))}
       </div>
 
-      {/* Right column */}
-      <div className="absolute right-[5%] top-20 flex w-72 flex-col gap-4 animate-float" style={{ animationDelay: "1s" }}>
+      {/* Right column - hidden on mobile */}
+      <div className="absolute right-[5%] top-20 hidden w-72 flex-col gap-4 opacity-20 animate-float md:flex" style={{ animationDelay: "1s" }}>
         {polls.slice(4, 8).map((poll, i) => (
           <div
             key={poll.id}
@@ -97,7 +97,7 @@ export const LiveFeedBackground = () => {
         ))}
       </div>
 
-      {/* Floating orbs */}
+      {/* Floating orbs - always visible but subtle */}
       <div className="absolute left-1/4 top-1/3 h-64 w-64 rounded-full bg-primary/5 blur-3xl" />
       <div className="absolute right-1/4 bottom-1/3 h-48 w-48 rounded-full bg-accent/5 blur-3xl" />
     </div>
