@@ -67,7 +67,7 @@ const Index = () => {
           <Accordion type="single" collapsible className="space-y-2">
             {/* Where am I */}
             <AccordionItem value="where" className="glass-card rounded-xl border-0 overflow-hidden border-l-2 border-l-primary bg-primary/50">
-              <AccordionTrigger className="px-4 py-3 text-sm font-medium hover:no-underline text-primary">
+              <AccordionTrigger className="px-4 py-3 text-sm font-medium hover:no-underline text-primary bg-background/80">
                 {t('landing.whereAmI.title')}
               </AccordionTrigger>
               <AccordionContent className="px-4 pb-3">
@@ -81,7 +81,7 @@ const Index = () => {
 
             {/* Why sign up */}
             <AccordionItem value="why" className="glass-card rounded-xl border-0 overflow-hidden border-l-2 border-l-primary bg-primary/50">
-              <AccordionTrigger className="px-4 py-3 text-sm font-medium hover:no-underline text-primary">
+              <AccordionTrigger className="px-4 py-3 text-sm font-medium hover:no-underline text-primary bg-background/80">
                 {t('landing.whySignup.title')}
               </AccordionTrigger>
               <AccordionContent className="px-4 pb-3">
