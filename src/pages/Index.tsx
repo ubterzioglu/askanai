@@ -66,8 +66,8 @@ const Index = () => {
         <div className="absolute bottom-6 left-6 z-10 hidden md:block max-w-xs animate-slide-up" style={{ animationDelay: '0.3s' }}>
           <Accordion type="single" collapsible className="space-y-2">
             {/* Where am I */}
-            <AccordionItem value="where" className="glass-card rounded-xl border-0 overflow-hidden">
-              <AccordionTrigger className="px-4 py-3 text-sm font-medium hover:no-underline">
+            <AccordionItem value="where" className="glass-card rounded-xl border-0 overflow-hidden border-l-2 border-l-orange-500/50 bg-orange-500/5">
+              <AccordionTrigger className="px-4 py-3 text-sm font-medium hover:no-underline text-orange-200/90">
                 {t('landing.whereAmI.title')}
               </AccordionTrigger>
               <AccordionContent className="px-4 pb-3">
@@ -80,8 +80,8 @@ const Index = () => {
             </AccordionItem>
 
             {/* Why sign up */}
-            <AccordionItem value="why" className="glass-card rounded-xl border-0 overflow-hidden">
-              <AccordionTrigger className="px-4 py-3 text-sm font-medium hover:no-underline">
+            <AccordionItem value="why" className="glass-card rounded-xl border-0 overflow-hidden border-l-2 border-l-orange-500/50 bg-orange-500/5">
+              <AccordionTrigger className="px-4 py-3 text-sm font-medium hover:no-underline text-orange-200/90">
                 {t('landing.whySignup.title')}
               </AccordionTrigger>
               <AccordionContent className="px-4 pb-3">
