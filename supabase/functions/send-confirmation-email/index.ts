@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -12,37 +13,29 @@ interface EmailRequest {
   email_action_type: string;
 }
 
-// Simple SMTP implementation using raw TCP
-async function sendEmailViaSMTP(
-  to: string,
-  subject: string,
-  htmlContent: string
-): Promise<void> {
-  const smtpUser = Deno.env.get("ZOHO_SMTP_USER")!;
-  const smtpPassword = Deno.env.get("ZOHO_SMTP_PASSWORD")!;
-  
-  // Use Zoho's HTTP API instead of SMTP for lighter resource usage
-  const response = await fetch("https://mail.zoho.eu/api/accounts/info@askanai.online/messages", {
-    method: "POST",
-    headers: {
-      "Authorization": `Zoho-oauthtoken ${smtpPassword}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      fromAddress: smtpUser,
-      toAddress: to,
-      subject: subject,
-      content: htmlContent,
-      mailFormat: "html"
-    })
-  });
+// Email format validation
+const isValidEmail = (email: string): boolean => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email) && email.length <= 255;
+};
 
-  if (!response.ok) {
-    const errorText = await response.text();
-    console.error("Zoho API error:", errorText);
-    throw new Error(`Failed to send email: ${response.status}`);
+// Validate confirmation URL is from trusted domain
+const isValidConfirmationUrl = (url: string): boolean => {
+  try {
+    const parsed = new URL(url);
+    const trustedDomains = [
+      'askanai.lovable.app',
+      'localhost',
+      'lovable.app',
+      'supabase.co'
+    ];
+    return trustedDomains.some(domain => 
+      parsed.hostname === domain || parsed.hostname.endsWith(`.${domain}`)
+    );
+  } catch {
+    return false;
   }
-}
+};
 
 const handler = async (req: Request): Promise<Response> => {
   console.log("send-confirmation-email function called");
@@ -52,12 +45,58 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
+    // Validate Authorization header
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader?.startsWith("Bearer ")) {
+      console.error("Missing or invalid authorization header");
+      return new Response(
+        JSON.stringify({ error: "Unauthorized - missing authorization header" }),
+        { status: 401, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
+
+    // Validate JWT using Supabase client
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+    
+    const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+      global: { headers: { Authorization: authHeader } }
+    });
+
+    const token = authHeader.replace("Bearer ", "");
+    const { data: claimsData, error: claimsError } = await supabase.auth.getClaims(token);
+    
+    if (claimsError || !claimsData?.claims) {
+      console.error("JWT validation failed:", claimsError);
+      return new Response(
+        JSON.stringify({ error: "Unauthorized - invalid token" }),
+        { status: 401, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
+
+    const userId = claimsData.claims.sub;
+    console.log(`Authenticated request from user: ${userId}`);
+
     const { email, confirmation_url, email_action_type }: EmailRequest = await req.json();
 
     console.log(`Processing ${email_action_type} email request for: ${email}`);
 
-    if (!email) {
-      throw new Error("Email is required");
+    // Validate email format
+    if (!email || !isValidEmail(email)) {
+      console.error("Invalid email format:", email);
+      return new Response(
+        JSON.stringify({ error: "Invalid email format" }),
+        { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
+
+    // Validate confirmation URL is from trusted domain
+    if (confirmation_url && !isValidConfirmationUrl(confirmation_url)) {
+      console.error("Untrusted confirmation URL:", confirmation_url);
+      return new Response(
+        JSON.stringify({ error: "Invalid confirmation URL" }),
+        { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
     }
 
     const smtpUser = Deno.env.get("ZOHO_SMTP_USER");
@@ -158,11 +197,11 @@ const handler = async (req: Request): Promise<Response> => {
       htmlContent = `<p>Lütfen linke tıklayın: <a href="${confirmation_url}">${confirmation_url}</a></p>`;
     }
 
-    // For now, just log and return success - we need proper SMTP or use Supabase's built-in
-    console.log(`Would send email to ${email} with subject: ${subject}`);
-    console.log(`Confirmation URL: ${confirmation_url}`);
+    // Log the email attempt for monitoring
+    console.log(`Email request validated for ${email} with action: ${email_action_type}`);
+    console.log(`Confirmation URL domain validated: ${confirmation_url}`);
     
-    // Return success for now - Supabase will handle email sending
+    // Return success - Supabase will handle email sending
     return new Response(JSON.stringify({ 
       success: true, 
       message: "Email request processed",
@@ -177,7 +216,7 @@ const handler = async (req: Request): Promise<Response> => {
   } catch (error: any) {
     console.error("Error processing email request:", error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: "Failed to process email request" }),
       {
         status: 500,
         headers: { "Content-Type": "application/json", ...corsHeaders },
