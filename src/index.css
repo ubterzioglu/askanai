@@ -61,11 +61,19 @@
     --neon-orange: 17 96% 52%;
     --neon-yellow: 44 100% 50%;
 
+    /* almanya101 Office Color Palette */
+    --alm-blue: 199 99% 47%;
+    --alm-green: 76 100% 37%;
+    --alm-orange: 17 92% 52%;
+    --alm-purple: 287 97% 37%;
+    --alm-yellow: 44 100% 50%;
+
     /* Glow effects */
-    --glow-blue: 0 0 40px hsl(201, 99%, 47%, 0.4);
-    --glow-green: 0 0 40px hsl(80, 100%, 37%, 0.4);
-    --glow-orange: 0 0 40px hsl(17, 96%, 52%, 0.4);
+    --glow-blue: 0 0 40px hsl(199, 99%, 47%, 0.4);
+    --glow-green: 0 0 40px hsl(76, 100%, 37%, 0.4);
+    --glow-orange: 0 0 40px hsl(17, 92%, 52%, 0.4);
     --glow-yellow: 0 0 40px hsl(44, 100%, 50%, 0.4);
+    --glow-purple: 0 0 40px hsl(287, 97%, 37%, 0.4);
     
     /* Sidebar */
     --sidebar-background: 0 0% 4%;
