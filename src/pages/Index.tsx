@@ -22,15 +22,8 @@ const Index = () => {
 
       {/* Main content */}
       <div className="relative z-10 flex min-h-screen flex-col">
-        {/* Header - minimal */}
-        <header className="flex items-center justify-between p-6">
-          <div className="flex items-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-primary animate-glow-pulse">
-              <span className="font-display text-lg font-bold text-primary-foreground">A</span>
-            </div>
-            <span className="font-display text-xl font-bold tracking-tight">ASKANAI</span>
-          </div>
-        </header>
+        {/* Header - empty spacer */}
+        <header className="p-6" />
 
         {/* Hero - Central ask input */}
         <main className="flex flex-1 flex-col items-center justify-center px-4 pb-20">
@@ -64,8 +57,8 @@ const Index = () => {
           </div>
         </main>
 
-        {/* Floating info cards - bottom left */}
-        <div className="fixed bottom-6 left-6 z-20 flex flex-col gap-2 max-w-xs">
+        {/* Floating info cards - bottom left, above logo */}
+        <div className="fixed bottom-20 left-6 z-20 flex flex-col gap-2 max-w-xs">
           {/* Where am I? Card */}
           <div className="rounded-2xl border border-border/50 bg-card/90 backdrop-blur-md shadow-lg overflow-hidden">
             <button
@@ -169,12 +162,12 @@ const Index = () => {
           </div>
         </div>
 
-        {/* Bottom hint */}
-        <div className="absolute bottom-6 left-0 right-0 text-center">
-          <div className="inline-flex items-center gap-2 rounded-full border border-border/50 bg-card/40 px-4 py-2 text-sm text-muted-foreground backdrop-blur-sm">
-            <span className="text-lg">⚡</span>
-            <span>create polls in seconds</span>
+        {/* Logo - bottom left */}
+        <div className="fixed bottom-6 left-6 z-30 flex items-center gap-2">
+          <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-primary animate-glow-pulse">
+            <span className="font-display text-lg font-bold text-primary-foreground">A</span>
           </div>
+          <span className="font-display text-xl font-bold tracking-tight">ASKANAI</span>
         </div>
       </div>
     </div>
