@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { ArrowRight } from "lucide-react";
+import { useTranslation } from "@/contexts/LanguageContext";
 
 interface AskInputProps {
   onSubmit: (question: string) => void;
@@ -18,6 +19,7 @@ const placeholders = [
 ];
 
 export const AskInput = ({ onSubmit, placeholder }: AskInputProps) => {
+  const { t } = useTranslation();
   const [value, setValue] = useState("");
   const [currentPlaceholder, setCurrentPlaceholder] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
