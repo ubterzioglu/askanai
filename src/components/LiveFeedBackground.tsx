@@ -50,7 +50,7 @@ export const LiveFeedBackground = () => {
   }, []);
 
   return (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden">
+    <div className="pointer-events-none fixed inset-0 overflow-hidden">
       {/* Left column - more faded on mobile */}
       <div 
         className="absolute left-[5%] top-0 flex w-72 flex-col gap-4 animate-float opacity-[0.08] md:opacity-20" 
