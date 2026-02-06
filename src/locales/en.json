@@ -1,0 +1,158 @@
+{
+  "common": {
+    "loading": "loading...",
+    "error": "something went wrong",
+    "save": "save",
+    "cancel": "cancel",
+    "delete": "delete",
+    "edit": "edit",
+    "share": "share",
+    "copy": "copy",
+    "copied": "copied!",
+    "back": "back",
+    "next": "next",
+    "submit": "submit",
+    "create": "create",
+    "login": "login",
+    "logout": "logout",
+    "signup": "sign up",
+    "continueWithGoogle": "continue with Google"
+  },
+  "landing": {
+    "tagline": "ask",
+    "taglineSuffix": "anything",
+    "subtitle": "create a poll in 10 seconds",
+    "placeholder": "what do you want to ask?",
+    "socialProof": {
+      "pollsToday": "polls today",
+      "responses": "responses"
+    },
+    "whereAmI": {
+      "title": "where am i?",
+      "line1": "🎯 create polls, share, see results",
+      "line2": "📱 tap to vote, fast & fun",
+      "line3": "✨ 100% free, no signup"
+    },
+    "whySignup": {
+      "title": "why sign up?",
+      "feature": "feature",
+      "guest": "guest",
+      "member": "member",
+      "createPolls": "create polls",
+      "vote": "vote",
+      "seeResults": "see results",
+      "managePolls": "manage polls",
+      "ifLinkLost": "😢 if link lost",
+      "allSaved": "✅ all saved",
+      "feelCool": "feel cool",
+      "meh": "😐 meh",
+      "yes": "😎 yes",
+      "price": "price",
+      "free": "🆓 free",
+      "note": "💡 both are free, signup takes just 10 seconds"
+    }
+  },
+  "create": {
+    "questionPlaceholder": "type your question...",
+    "optionPlaceholder": "option",
+    "addOption": "add option",
+    "addQuestion": "add question",
+    "removeQuestion": "remove this question",
+    "showSettings": "show settings",
+    "hideSettings": "hide settings",
+    "ready": "Ready!",
+    "notReady": "Not Ready!",
+    "publishing": "...",
+    "settings": {
+      "resultsVisibility": "Results visibility",
+      "visibilityHelp": "Controls who can see your poll results. Choose based on how private you want the data.",
+      "public": "Public",
+      "unlisted": "Unlisted",
+      "votersOnly": "Voters only",
+      "private": "Private",
+      "publicDesc": "🌍 Anyone can find and see results",
+      "unlistedDesc": "🔗 Only people with the link can access",
+      "votersDesc": "🗳️ Results visible only after voting",
+      "privateDesc": "🔒 Only you can see the results",
+      "allowComments": "Allow comments",
+      "commentsHelp": "Let people discuss your poll",
+      "previewImage": "Preview image",
+      "previewImageHelp": "This image will show when sharing on social media"
+    },
+    "errors": {
+      "selectImage": "Please select an image file",
+      "imageTooLarge": "Image must be less than 5MB",
+      "uploadFailed": "Failed to upload image",
+      "createFailed": "Failed to create poll",
+      "somethingWrong": "Something went wrong"
+    }
+  },
+  "poll": {
+    "questionNotFound": "question not found",
+    "backToPoll": "back to poll",
+    "required": "*",
+    "notLikely": "not likely",
+    "veryLikely": "very likely",
+    "typeAnswer": "type your answer..."
+  },
+  "results": {
+    "responses": "responses",
+    "response": "response",
+    "pollNotFound": "poll not found",
+    "goHome": "go home",
+    "averageRating": "average rating out of 5",
+    "npsScore": "NPS Score",
+    "detractors": "detractors",
+    "passives": "passives",
+    "promoters": "promoters",
+    "discussion": "discussion",
+    "addComment": "add a comment...",
+    "noComments": "no comments yet. be the first! 👀",
+    "anon": "anon",
+    "commentAdded": "comment added! 💬",
+    "commentFailed": "failed to add comment",
+    "linkCopied": "link copied! 🔗",
+    "createYourOwn": "create your own poll ✨"
+  },
+  "share": {
+    "title": "poll created! 🎉",
+    "copyLink": "copy link",
+    "shareWhatsApp": "share on WhatsApp",
+    "viewResults": "view results",
+    "createAnother": "create another"
+  },
+  "auth": {
+    "login": "Login",
+    "signup": "Sign Up",
+    "email": "Email",
+    "password": "Password",
+    "emailPlaceholder": "you@example.com",
+    "passwordPlaceholder": "••••••••",
+    "minPassword": "Minimum 6 characters",
+    "signingIn": "Signing in...",
+    "signingUp": "Creating account...",
+    "signIn": "Sign In",
+    "createAccount": "Create Account",
+    "orContinueWith": "or continue with",
+    "alreadyHaveAccount": "Already have an account?",
+    "dontHaveAccount": "Don't have an account?",
+    "errors": {
+      "fillAllFields": "Please fill in all fields",
+      "passwordTooShort": "Password must be at least 6 characters",
+      "invalidEmail": "Please enter a valid email",
+      "alreadyRegistered": "This email is already registered. Please sign in.",
+      "checkEmail": "Check your email to verify your account!",
+      "loginFailed": "Login failed. Please check your credentials.",
+      "signupFailed": "Signup failed. Please try again."
+    }
+  },
+  "questionTypes": {
+    "single_choice": "Single Choice",
+    "multiple_choice": "Multiple Choice",
+    "rating": "Rating",
+    "nps": "NPS",
+    "ranking": "Ranking",
+    "short_text": "Text",
+    "emoji": "Emoji"
+  }
+}
