@@ -354,19 +354,37 @@ const CreatePoll = () => {
 
           {/* Multiple questions nav */}
           {questions.length > 1 && (
-            <div className="flex items-center justify-center gap-2">
-              {questions.map((_, i) => (
+            <div className="flex flex-col items-center gap-3">
+              <div className="flex items-center justify-center gap-2">
+                {questions.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setCurrentQuestionIndex(i)}
+                    className={cn(
+                      "flex h-9 w-9 items-center justify-center rounded-full text-sm font-medium transition-all",
+                      i === currentQuestionIndex
+                        ? "bg-primary text-primary-foreground shadow-[0_0_15px_hsl(var(--primary)/0.5)] scale-110"
+                        : "bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground border border-border/50"
+                    )}
+                  >
+                    {i + 1}
+                  </button>
+                ))}
+              </div>
+              {/* Remove question button */}
+              {questions.length > 1 && (
                 <button
-                  key={i}
-                  onClick={() => setCurrentQuestionIndex(i)}
-                  className={cn(
-                    "h-2 w-2 rounded-full transition-all",
-                    i === currentQuestionIndex
-                      ? "w-6 bg-primary"
-                      : "bg-muted hover:bg-muted-foreground/50"
-                  )}
-                />
-              ))}
+                  onClick={() => {
+                    const newQuestions = questions.filter((_, i) => i !== currentQuestionIndex);
+                    setQuestions(newQuestions);
+                    setCurrentQuestionIndex(Math.min(currentQuestionIndex, newQuestions.length - 1));
+                  }}
+                  className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-destructive transition-colors"
+                >
+                  <Trash2 className="h-3.5 w-3.5" />
+                  <span>remove this question</span>
+                </button>
+              )}
             </div>
           )}
 
