@@ -31,13 +31,16 @@ const Index = () => {
         <main className="flex flex-1 flex-col items-center justify-center px-4 pb-20">
           <div className="w-full max-w-2xl space-y-8 text-center animate-slide-up">
             {/* Tagline */}
-            <div className="space-y-2">
+            <div className="space-y-3">
               <h1 className="text-5xl font-bold tracking-tight md:text-6xl lg:text-7xl">
                 <span className="text-glow-blue">ask</span>{" "}
                 <span className="text-muted-foreground">anything</span>
               </h1>
               <p className="text-lg text-muted-foreground">
                 throw a question into the internet
+              </p>
+              <p className="text-sm font-medium text-primary animate-pulse">
+                ⚡ Create a poll in 10 seconds!
               </p>
             </div>
 
