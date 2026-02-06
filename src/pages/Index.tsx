@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { AskInput } from "@/components/AskInput";
 import { LiveFeedBackground } from "@/components/LiveFeedBackground";
-import { HelpCircle, UserCheck, UserX, ChevronDown, Sparkles, Home } from "lucide-react";
+import { HelpCircle, UserCheck, UserX, ChevronDown, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const Index = () => {
@@ -158,25 +158,6 @@ const Index = () => {
             )}
           </div>
         </div>
-
-        {/* Neon pulse home button - bottom left */}
-        <button 
-          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          className="fixed bottom-6 left-6 z-30 group"
-          title="Ana Sayfa"
-        >
-          <div className="relative flex h-14 w-14 items-center justify-center">
-            {/* Outer glow ring */}
-            <div className="absolute inset-0 rounded-full bg-primary/20 blur-xl transition-all duration-500 group-hover:bg-primary/40 group-hover:blur-2xl" />
-            {/* Pulsing rings */}
-            <div className="absolute inset-1 rounded-full border border-primary/30 animate-ping opacity-20" />
-            <div className="absolute inset-2 rounded-full border border-primary/50 animate-pulse" />
-            {/* Core button */}
-            <div className="relative flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary/60 shadow-[0_0_20px_hsl(201,99%,47%,0.5)] transition-all duration-300 group-hover:scale-110 group-hover:shadow-[0_0_40px_hsl(201,99%,47%,0.7)]">
-              <Home className="h-5 w-5 text-primary-foreground" />
-            </div>
-          </div>
-        </button>
       </div>
     </div>
   );
