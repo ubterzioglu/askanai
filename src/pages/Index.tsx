@@ -159,13 +159,15 @@ const Index = () => {
           </div>
         </div>
 
-        {/* Logo - bottom left */}
-        <div className="fixed bottom-6 left-6 z-30 flex items-center gap-2">
-          <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-primary animate-glow-pulse">
-            <span className="font-display text-lg font-bold text-primary-foreground">A</span>
+        {/* Home button - bottom left */}
+        <button 
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          className="fixed bottom-6 left-6 z-30 group"
+        >
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 border border-primary/30 backdrop-blur-sm transition-all duration-300 group-hover:bg-primary group-hover:scale-110 group-hover:shadow-[0_0_30px_hsl(201,99%,47%,0.4)]">
+            <span className="text-2xl transition-transform duration-300 group-hover:scale-110">🏠</span>
           </div>
-          <span className="font-display text-xl font-bold tracking-tight">ASKANAI</span>
-        </div>
+        </button>
       </div>
     </div>
   );
