@@ -39,8 +39,8 @@ const Index = () => {
               <p className="text-lg text-muted-foreground">
                 throw a question into the internet
               </p>
-              <p className="text-sm font-medium text-primary animate-pulse">
-                ⚡ Create a poll in 10 seconds!
+              <p className="text-lg text-muted-foreground">
+                ⚡ create a poll in 10 seconds
               </p>
             </div>
 
