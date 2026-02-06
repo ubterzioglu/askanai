@@ -98,10 +98,11 @@ const Index = () => {
             <button
               onClick={() => setShowComparison(!showComparison)}
               className="flex w-full items-center justify-between gap-2 px-4 py-3 text-sm font-medium text-foreground hover:bg-accent/50 transition-colors"
+              title="to sign up, or not to sign up..."
             >
               <div className="flex items-center gap-2">
                 <Sparkles className="h-4 w-4 text-primary" />
-                <span>signed up vs guest 🤔</span>
+                <span>to sign up or not to sign up 🎭</span>
               </div>
               <ChevronDown className={cn("h-4 w-4 transition-transform", showComparison && "rotate-180")} />
             </button>
