@@ -308,18 +308,26 @@ const CreatePoll = () => {
           {/* Advanced settings */}
           {showAdvanced && (
             <div className="space-y-4 rounded-2xl border border-border bg-card/40 p-6 animate-slide-up">
-              <div className="flex items-center justify-between">
-                <span className="text-sm">Results visibility</span>
-                <select
-                  value={visibility}
-                  onChange={(e) => setVisibility(e.target.value as any)}
-                  className="rounded-xl border border-border bg-background px-3 py-2 text-sm"
-                >
-                  <option value="public">Public</option>
-                  <option value="unlisted">Unlisted</option>
-                  <option value="voters">Voters only</option>
-                  <option value="private">Private</option>
-                </select>
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm">Results visibility</span>
+                  <select
+                    value={visibility}
+                    onChange={(e) => setVisibility(e.target.value as any)}
+                    className="rounded-xl border border-border bg-background px-3 py-2 text-sm"
+                  >
+                    <option value="public">Public</option>
+                    <option value="unlisted">Unlisted</option>
+                    <option value="voters">Voters only</option>
+                    <option value="private">Private</option>
+                  </select>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  {visibility === "public" && "Herkes anketi bulabilir ve sonuçları görebilir"}
+                  {visibility === "unlisted" && "Sadece linke sahip olanlar anketi ve sonuçları görebilir"}
+                  {visibility === "voters" && "Sadece oy verenler sonuçları görebilir"}
+                  {visibility === "private" && "Sadece sen sonuçları görebilirsin"}
+                </p>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-sm">Allow comments</span>
