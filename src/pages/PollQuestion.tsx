@@ -3,8 +3,9 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { ArrowLeft, Check } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { getPollWithQuestions, submitResponse, type Question, type Option } from "@/lib/polls";
+import { getPollWithQuestions, submitResponse, trackPollView, type Question, type Option } from "@/lib/polls";
 import { useQuery } from "@tanstack/react-query";
+import { useRef } from "react";
 
 const PollQuestion = () => {
   const { slug, questionNum } = useParams();
@@ -17,6 +18,7 @@ const PollQuestion = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [tappedOption, setTappedOption] = useState<string | null>(null);
+  const viewTrackedRef = useRef(false);
 
   const { data: pollData, isLoading, error } = useQuery({
     queryKey: ['poll', slug],
@@ -32,6 +34,14 @@ const PollQuestion = () => {
   useEffect(() => {
     sessionStorage.setItem(`poll-${slug}-answers`, JSON.stringify(answers));
   }, [answers, slug]);
+
+  // Track poll view once when poll data is loaded
+  useEffect(() => {
+    if (poll?.id && !viewTrackedRef.current) {
+      viewTrackedRef.current = true;
+      trackPollView(poll.id);
+    }
+  }, [poll?.id]);
 
   // Reset tapped state when question changes
   useEffect(() => {

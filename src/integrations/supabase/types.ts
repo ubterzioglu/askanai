@@ -139,6 +139,35 @@ export type Database = {
           },
         ]
       }
+      poll_views: {
+        Row: {
+          created_at: string
+          fingerprint: string
+          id: string
+          poll_id: string
+        }
+        Insert: {
+          created_at?: string
+          fingerprint: string
+          id?: string
+          poll_id: string
+        }
+        Update: {
+          created_at?: string
+          fingerprint?: string
+          id?: string
+          poll_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "poll_views_poll_id_fkey"
+            columns: ["poll_id"]
+            isOneToOne: false
+            referencedRelation: "polls"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       polls: {
         Row: {
           allow_comments: boolean
