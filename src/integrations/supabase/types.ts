@@ -105,6 +105,13 @@ export type Database = {
             referencedRelation: "polls"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "comments_poll_id_fkey"
+            columns: ["poll_id"]
+            isOneToOne: false
+            referencedRelation: "polls_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
       options: {
@@ -164,6 +171,13 @@ export type Database = {
             columns: ["poll_id"]
             isOneToOne: false
             referencedRelation: "polls"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "poll_views_poll_id_fkey"
+            columns: ["poll_id"]
+            isOneToOne: false
+            referencedRelation: "polls_public"
             referencedColumns: ["id"]
           },
         ]
@@ -258,6 +272,13 @@ export type Database = {
             referencedRelation: "polls"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "questions_poll_id_fkey"
+            columns: ["poll_id"]
+            isOneToOne: false
+            referencedRelation: "polls_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
       responses: {
@@ -291,6 +312,13 @@ export type Database = {
             columns: ["poll_id"]
             isOneToOne: false
             referencedRelation: "polls"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "responses_poll_id_fkey"
+            columns: ["poll_id"]
+            isOneToOne: false
+            referencedRelation: "polls_public"
             referencedColumns: ["id"]
           },
         ]
@@ -349,6 +377,13 @@ export type Database = {
             columns: ["poll_id"]
             isOneToOne: false
             referencedRelation: "polls"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tickets_poll_id_fkey"
+            columns: ["poll_id"]
+            isOneToOne: false
+            referencedRelation: "polls_public"
             referencedColumns: ["id"]
           },
         ]
@@ -412,7 +447,66 @@ export type Database = {
             referencedRelation: "polls"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "comments_poll_id_fkey"
+            columns: ["poll_id"]
+            isOneToOne: false
+            referencedRelation: "polls_public"
+            referencedColumns: ["id"]
+          },
         ]
+      }
+      polls_public: {
+        Row: {
+          allow_comments: boolean | null
+          close_after_responses: number | null
+          created_at: string | null
+          created_by_user_id: string | null
+          description: string | null
+          id: string | null
+          open_until: string | null
+          preview_image_url: string | null
+          slug: string | null
+          status: Database["public"]["Enums"]["poll_status"] | null
+          title: string | null
+          updated_at: string | null
+          visibility_mode: Database["public"]["Enums"]["visibility_mode"] | null
+        }
+        Insert: {
+          allow_comments?: boolean | null
+          close_after_responses?: number | null
+          created_at?: string | null
+          created_by_user_id?: string | null
+          description?: string | null
+          id?: string | null
+          open_until?: string | null
+          preview_image_url?: string | null
+          slug?: string | null
+          status?: Database["public"]["Enums"]["poll_status"] | null
+          title?: string | null
+          updated_at?: string | null
+          visibility_mode?:
+            | Database["public"]["Enums"]["visibility_mode"]
+            | null
+        }
+        Update: {
+          allow_comments?: boolean | null
+          close_after_responses?: number | null
+          created_at?: string | null
+          created_by_user_id?: string | null
+          description?: string | null
+          id?: string | null
+          open_until?: string | null
+          preview_image_url?: string | null
+          slug?: string | null
+          status?: Database["public"]["Enums"]["poll_status"] | null
+          title?: string | null
+          updated_at?: string | null
+          visibility_mode?:
+            | Database["public"]["Enums"]["visibility_mode"]
+            | null
+        }
+        Relationships: []
       }
       responses_public: {
         Row: {
@@ -442,6 +536,13 @@ export type Database = {
             columns: ["poll_id"]
             isOneToOne: false
             referencedRelation: "polls"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "responses_poll_id_fkey"
+            columns: ["poll_id"]
+            isOneToOne: false
+            referencedRelation: "polls_public"
             referencedColumns: ["id"]
           },
         ]

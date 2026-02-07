@@ -214,15 +214,11 @@ const hashKey = async (key: string): Promise<string> => {
   return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 };
 
-// Get poll by slug - explicitly excludes creator_key_hash for security
+// Get poll by slug - uses polls_public view to exclude creator_key_hash
 export const getPollBySlug = async (slug: string): Promise<Poll | null> => {
   const { data, error } = await supabase
-    .from('polls')
-    .select(`
-      id, slug, title, description, status, created_by_user_id,
-      open_until, close_after_responses, visibility_mode,
-      allow_comments, created_at, updated_at
-    `)
+    .from('polls_public')
+    .select('*')
     .eq('slug', slug)
     .single();
 
