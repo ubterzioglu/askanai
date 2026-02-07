@@ -4,7 +4,7 @@ import { Share2, Copy, Check, Send, RefreshCw, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { getPollWithQuestions, getPollResults, getComments, addComment, type Comment } from "@/lib/polls";
+import { getPollWithQuestions, getPollResults, getComments, addComment, getPollViewCount, type Comment } from "@/lib/polls";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
@@ -30,6 +30,12 @@ const PollResults = () => {
   const { data: comments = [] } = useQuery({
     queryKey: ['comments', pollData?.poll?.id],
     queryFn: () => getComments(pollData?.poll?.id || ''),
+    enabled: !!pollData?.poll?.id,
+  });
+
+  const { data: viewCount = 0 } = useQuery({
+    queryKey: ['viewCount', pollData?.poll?.id],
+    queryFn: () => getPollViewCount(pollData?.poll?.id || ''),
     enabled: !!pollData?.poll?.id,
   });
 
@@ -207,9 +213,14 @@ const PollResults = () => {
       <main className="container max-w-2xl py-8">
         {/* Header */}
         <div className="mb-10 text-center animate-fade-in">
-          <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-accent/10 px-4 py-2 text-sm font-medium text-accent">
-            <div className="pulse-dot" />
-            <span>{responseCount} response{responseCount !== 1 && 's'}</span>
+          <div className="mb-4 flex flex-wrap items-center justify-center gap-3">
+            <div className="inline-flex items-center gap-2 rounded-full bg-accent/10 px-4 py-2 text-sm font-medium text-accent">
+              <div className="pulse-dot" />
+              <span>{responseCount} oy</span>
+            </div>
+            <div className="inline-flex items-center gap-2 rounded-full bg-muted px-4 py-2 text-sm font-medium text-muted-foreground">
+              <span>👁️ {viewCount} görüntüleme</span>
+            </div>
           </div>
           <h1 className="text-3xl font-bold md:text-4xl">{poll.title}</h1>
         </div>

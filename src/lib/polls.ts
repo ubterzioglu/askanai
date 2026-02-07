@@ -418,3 +418,38 @@ export const addComment = async (
 
   return data as Comment;
 };
+
+// Track poll view (unique per fingerprint)
+export const trackPollView = async (pollId: string): Promise<boolean> => {
+  const fingerprint = getFingerprint();
+
+  const { error } = await supabase
+    .from('poll_views')
+    .insert({
+      poll_id: pollId,
+      fingerprint,
+    });
+
+  // If error is duplicate key, it's fine - they've already viewed
+  if (error && error.code !== '23505') {
+    console.error('Error tracking poll view:', error);
+    return false;
+  }
+
+  return true;
+};
+
+// Get poll view count
+export const getPollViewCount = async (pollId: string): Promise<number> => {
+  const { count, error } = await supabase
+    .from('poll_views')
+    .select('*', { count: 'exact', head: true })
+    .eq('poll_id', pollId);
+
+  if (error) {
+    console.error('Error fetching poll view count:', error);
+    return 0;
+  }
+
+  return count || 0;
+};
