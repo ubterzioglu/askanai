@@ -283,13 +283,13 @@ export const submitResponse = async (
 ): Promise<Response | null> => {
   const fingerprint = getFingerprint();
 
-  // Check for duplicate submission
+  // Check for duplicate submission (use maybeSingle to avoid 406 error)
   const { data: existing } = await supabase
     .from('responses')
     .select('id')
     .eq('poll_id', pollId)
     .eq('fingerprint', fingerprint)
-    .single();
+    .maybeSingle();
 
   if (existing) {
     console.warn('Duplicate submission detected');
