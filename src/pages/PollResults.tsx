@@ -105,13 +105,15 @@ const PollResults = () => {
     }
 
     if (questionType === 'rating') {
+      const scale = question?.settings_json?.scale || 5;
       const values = questionAnswers.map((a: any) => a.value_number).filter(Boolean);
       const avg = values.length > 0 ? values.reduce((a: number, b: number) => a + b, 0) / values.length : 0;
-      const distribution = [0, 0, 0, 0, 0];
-      values.forEach((v: number) => { if (v >= 1 && v <= 5) distribution[v - 1]++; });
+      const distribution = Array(scale).fill(0);
+      values.forEach((v: number) => { if (v >= 1 && v <= scale) distribution[v - 1]++; });
       const total = values.length || 1;
       return {
         average: avg.toFixed(1),
+        scale,
         distribution: distribution.map((d) => Math.round((d / total) * 100)),
       };
     }
@@ -259,7 +261,8 @@ const PollResults = () => {
             }
 
             if (question.type === 'rating' && questionResults) {
-              const r = questionResults as { average: string; distribution: number[] };
+              const r = questionResults as { average: string; scale: number; distribution: number[] };
+              const scale = r.scale || 5;
               return (
                 <div key={question.id} className="neon-card animate-slide-up" style={{ animationDelay: `${qi * 100}ms` }}>
                   <h3 className="mb-6 text-xl font-bold">{question.prompt}</h3>
@@ -267,11 +270,17 @@ const PollResults = () => {
                     <div className="mb-2 text-6xl font-bold text-primary text-glow-blue">
                       {r.average}
                     </div>
-                    <p className="text-sm text-muted-foreground">average rating out of 5</p>
-                    <div className="mt-6 flex justify-center gap-2">
+                    <p className="text-sm text-muted-foreground">average rating out of {scale}</p>
+                    <div className={cn(
+                      "mt-6 flex justify-center",
+                      scale === 10 ? "flex-wrap gap-1.5" : "gap-2"
+                    )}>
                       {r.distribution.map((percent, i) => (
                         <div key={i} className="text-center">
-                          <div className="mx-auto mb-2 w-10 rounded-lg bg-primary/20 overflow-hidden">
+                          <div className={cn(
+                            "mx-auto mb-2 rounded-lg bg-primary/20 overflow-hidden",
+                            scale === 10 ? "w-7" : "w-10"
+                          )}>
                             <div 
                               className="w-full bg-primary transition-all duration-1000"
                               style={{ height: `${Math.max(4, percent * 1.5)}px` }}
