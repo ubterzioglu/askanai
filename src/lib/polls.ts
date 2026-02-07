@@ -113,6 +113,7 @@ export const createPoll = async (
     prompt: string;
     options: string[];
     isRequired: boolean;
+    settingsJson?: Record<string, any>;
   }>,
   settings: {
     visibility: Poll['visibility_mode'];
@@ -173,6 +174,7 @@ export const createPoll = async (
         type: q.type,
         prompt: q.prompt,
         is_required: q.isRequired,
+        settings_json: q.settingsJson || null,
       })
       .select()
       .single();
