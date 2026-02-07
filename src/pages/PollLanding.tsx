@@ -149,10 +149,15 @@ const PollLanding = () => {
             </div>
           )}
 
-          {/* Title */}
+          {/* Title - show poll title if different from first question, or first question if only one */}
           <h1 className="text-4xl font-bold leading-tight md:text-5xl">
             {poll.title}
           </h1>
+
+          {/* Show first question as subtitle if title is different and there's only 1 question */}
+          {questions.length === 1 && poll.title !== questions[0]?.prompt && (
+            <p className="text-xl text-muted-foreground">{questions[0]?.prompt}</p>
+          )}
 
           {/* Description */}
           {poll.description && (
