@@ -1,13 +1,15 @@
-import { useEffect } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
-import { ArrowRight, Home } from "lucide-react";
+import { ArrowRight, Home, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { getPollWithQuestions } from "@/lib/polls";
+import { getPollWithQuestions, hasAlreadyVoted } from "@/lib/polls";
 import { useQuery } from "@tanstack/react-query";
 
 const PollLanding = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
+  const [hasVoted, setHasVoted] = useState(false);
+  const voteCheckedRef = useRef(false);
 
   const { data: pollData, isLoading, error } = useQuery({
     queryKey: ['poll', slug],
@@ -17,6 +19,18 @@ const PollLanding = () => {
 
   const poll = pollData?.poll;
   const questions = pollData?.questions || [];
+
+  // Check if user has already voted
+  useEffect(() => {
+    if (poll?.id && !voteCheckedRef.current) {
+      voteCheckedRef.current = true;
+      hasAlreadyVoted(poll.id).then((voted) => {
+        if (voted) {
+          setHasVoted(true);
+        }
+      });
+    }
+  }, [poll?.id]);
 
   // Update OG meta tags when poll data loads
   useEffect(() => {
@@ -162,6 +176,24 @@ const PollLanding = () => {
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
+            </div>
+          ) : hasVoted ? (
+            <div className="space-y-4">
+              <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2 text-sm text-primary">
+                <CheckCircle2 className="h-4 w-4" />
+                <span>Oyunuz kaydedildi</span>
+              </div>
+              <div>
+                <Link to={`/p/${slug}/results`}>
+                  <Button className="btn-neon h-16 px-12 text-xl">
+                    Sonuçları Gör
+                    <ArrowRight className="ml-2 h-6 w-6" />
+                  </Button>
+                </Link>
+              </div>
+              <p className="text-sm text-muted-foreground opacity-60">
+                Her cihazdan yalnızca bir kez oy kullanabilirsiniz
+              </p>
             </div>
           ) : (
             <div className="space-y-4">
