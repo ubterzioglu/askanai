@@ -40,6 +40,7 @@ const CreatePoll = () => {
     },
   ]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [pollTitle, setPollTitle] = useState("");
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [visibility, setVisibility] = useState<"public" | "unlisted" | "voters" | "private">("public");
   const [allowComments, setAllowComments] = useState(true);
@@ -186,8 +187,11 @@ const needsOptions = (type: QuestionType) =>
         uploadedImageUrl = await uploadPreviewImage();
       }
 
+      // Use pollTitle if provided, otherwise use first question as title
+      const finalTitle = pollTitle.trim() || questions[0].prompt;
+      
       const result = await createPoll(
-        questions[0].prompt, // Use first question as title
+        finalTitle,
         null,
         questions.map((q) => {
           const { type, settings } = getDbTypeAndSettings(q.type);
@@ -267,6 +271,17 @@ const needsOptions = (type: QuestionType) =>
 
       <main className="container max-w-xl py-8">
         <div className="space-y-8 animate-fade-in">
+          {/* Poll title input (optional) */}
+          <div className="space-y-2">
+            <input
+              type="text"
+              value={pollTitle}
+              onChange={(e) => setPollTitle(e.target.value)}
+              placeholder="anket adı (isteğe bağlı)..."
+              className="w-full bg-transparent text-lg text-muted-foreground placeholder:text-muted-foreground/40 focus:outline-none border-b border-border/30 pb-2"
+            />
+          </div>
+
           {/* Question input */}
           <div className="space-y-4">
             <input

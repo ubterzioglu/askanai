@@ -193,17 +193,26 @@ const PollResults = () => {
             </div>
           </Link>
           <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="sm"
+            <button
               onClick={() => refetchResults()}
-              className="text-muted-foreground"
+              className="flex h-9 w-9 items-center justify-center rounded-xl transition-all duration-200 hover:scale-105"
+              style={{
+                background: 'hsl(var(--destructive))',
+                boxShadow: 'var(--glow-orange)',
+              }}
             >
-              <RefreshCw className="h-4 w-4" />
-            </Button>
-            <Button variant="ghost" size="sm" onClick={handleShare}>
-              {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-            </Button>
+              <RefreshCw className="h-4 w-4 text-destructive-foreground" />
+            </button>
+            <button 
+              onClick={handleShare}
+              className="flex h-9 w-9 items-center justify-center rounded-xl transition-all duration-200 hover:scale-105"
+              style={{
+                background: 'hsl(var(--warning))',
+                boxShadow: 'var(--glow-yellow)',
+              }}
+            >
+              {copied ? <Check className="h-4 w-4 text-warning-foreground" /> : <Copy className="h-4 w-4 text-warning-foreground" />}
+            </button>
             <Button size="sm" className="btn-neon h-9 px-4 text-sm" onClick={handleWhatsAppShare}>
               <Share2 className="h-4 w-4 mr-2" />
               share
@@ -215,7 +224,7 @@ const PollResults = () => {
       <main className="container max-w-2xl py-8">
         {/* Header */}
         <div className="mb-10 text-center animate-fade-in">
-          <div className="mb-4 flex flex-wrap items-center justify-center gap-3">
+          <div className="mb-4 flex flex-col items-center gap-2">
             <div className="inline-flex items-center gap-2 rounded-full bg-accent/10 px-4 py-2 text-sm font-medium text-accent">
               <div className="pulse-dot" />
               <span>{responseCount} oy</span>
@@ -333,11 +342,11 @@ const PollResults = () => {
               return (
                 <div key={question.id} className="neon-card animate-slide-up" style={{ animationDelay: `${qi * 100}ms` }}>
                   <h3 className="mb-6 text-xl font-bold">{question.prompt}</h3>
-                  <div className="flex justify-center gap-6">
+                  <div className="flex flex-wrap justify-center gap-4 sm:gap-6">
                     {(questionResults as any[]).map((r, i) => (
-                      <div key={r.emoji} className="text-center animate-bounce-in" style={{ animationDelay: `${i * 100}ms` }}>
-                        <div className="mb-2 text-5xl">{r.emoji}</div>
-                        <div className="text-xl font-bold text-primary">{r.percent}%</div>
+                      <div key={r.emoji} className="text-center animate-bounce-in min-w-[60px]" style={{ animationDelay: `${i * 100}ms` }}>
+                        <div className="mb-2 text-4xl sm:text-5xl">{r.emoji}</div>
+                        <div className="text-lg sm:text-xl font-bold text-primary">{r.percent}%</div>
                       </div>
                     ))}
                   </div>
