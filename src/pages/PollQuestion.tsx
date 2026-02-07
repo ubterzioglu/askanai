@@ -50,12 +50,22 @@ const PollQuestion = () => {
 
   const currentAnswer = question ? answers[question.id] : undefined;
 
+  const handleSubmit = async (finalAnswers?: Record<string, any>) => {
+    if (!poll) return;
+    setIsSubmitting(true);
+    const answersToSubmit = finalAnswers || answers;
+    await submitResponse(poll.id, answersToSubmit);
+    sessionStorage.removeItem(`poll-${slug}-answers`);
+    navigate(`/p/${slug}/results`);
+  };
+
   const handleTapSelect = (value: any, shouldAutoAdvance: boolean = true) => {
     if (!question) return;
     
     // Set the tapped option for visual feedback
     setTappedOption(String(value));
-    setAnswers({ ...answers, [question.id]: value });
+    const newAnswers = { ...answers, [question.id]: value };
+    setAnswers(newAnswers);
 
     // 0.4s micro feedback then auto-transition
     if (shouldAutoAdvance) {
@@ -63,7 +73,8 @@ const PollQuestion = () => {
         if (currentQ < totalQuestions - 1) {
           navigate(`/p/${slug}/q/${currentQ + 2}`);
         } else {
-          handleSubmit();
+          // Pass the updated answers directly to avoid closure issues
+          handleSubmit(newAnswers);
         }
       }, 400);
     }
@@ -76,14 +87,6 @@ const PollQuestion = () => {
       ? current.filter((o: string) => o !== option)
       : [...current, option];
     setAnswers({ ...answers, [question.id]: newValue });
-  };
-
-  const handleSubmit = async () => {
-    if (!poll) return;
-    setIsSubmitting(true);
-    await submitResponse(poll.id, answers);
-    sessionStorage.removeItem(`poll-${slug}-answers`);
-    navigate(`/p/${slug}/results`);
   };
 
   const handleBack = () => {
