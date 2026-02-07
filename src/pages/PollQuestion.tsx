@@ -1,11 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { ArrowLeft, Check } from "lucide-react";
+import { ArrowLeft, Check, AlertCircle } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { getPollWithQuestions, submitResponse, trackPollView, type Question, type Option } from "@/lib/polls";
+import { getPollWithQuestions, submitResponse, trackPollView, hasAlreadyVoted, type Question, type Option } from "@/lib/polls";
 import { useQuery } from "@tanstack/react-query";
-import { useRef } from "react";
+import { toast } from "sonner";
 
 const PollQuestion = () => {
   const { slug, questionNum } = useParams();
@@ -18,7 +18,9 @@ const PollQuestion = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [tappedOption, setTappedOption] = useState<string | null>(null);
+  const [hasVoted, setHasVoted] = useState(false);
   const viewTrackedRef = useRef(false);
+  const voteCheckedRef = useRef(false);
 
   const { data: pollData, isLoading, error } = useQuery({
     queryKey: ['poll', slug],
@@ -43,6 +45,18 @@ const PollQuestion = () => {
     }
   }, [poll?.id]);
 
+  // Check if user has already voted
+  useEffect(() => {
+    if (poll?.id && !voteCheckedRef.current) {
+      voteCheckedRef.current = true;
+      hasAlreadyVoted(poll.id).then((voted) => {
+        if (voted) {
+          setHasVoted(true);
+        }
+      });
+    }
+  }, [poll?.id]);
+
   // Reset tapped state when question changes
   useEffect(() => {
     setTappedOption(null);
@@ -54,7 +68,22 @@ const PollQuestion = () => {
     if (!poll) return;
     setIsSubmitting(true);
     const answersToSubmit = finalAnswers || answers;
-    await submitResponse(poll.id, answersToSubmit);
+    
+    const result = await submitResponse(poll.id, answersToSubmit);
+    
+    if (!result.success) {
+      setIsSubmitting(false);
+      if (result.error === 'already_voted') {
+        setHasVoted(true);
+        toast.error("Bu ankete zaten oy kullandınız!");
+        // Still navigate to results
+        setTimeout(() => navigate(`/p/${slug}/results`), 1500);
+        return;
+      }
+      toast.error("Oy gönderilirken bir hata oluştu");
+      return;
+    }
+    
     sessionStorage.removeItem(`poll-${slug}-answers`);
     navigate(`/p/${slug}/results`);
   };
@@ -103,6 +132,26 @@ const PollQuestion = () => {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background">
         <div className="h-10 w-10 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+      </div>
+    );
+  }
+
+  // Show "already voted" message and redirect to results
+  if (hasVoted) {
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center gap-6 bg-background px-4">
+        <div className="flex h-20 w-20 items-center justify-center rounded-full bg-primary/20">
+          <AlertCircle className="h-10 w-10 text-primary" />
+        </div>
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-2">Zaten Oy Kullandınız</h1>
+          <p className="text-muted-foreground">Bu ankete daha önce oy verdiniz. Her cihazdan yalnızca bir kez oy kullanabilirsiniz.</p>
+        </div>
+        <Link to={`/p/${slug}/results`}>
+          <button className="btn-neon">
+            Sonuçları Gör →
+          </button>
+        </Link>
       </div>
     );
   }

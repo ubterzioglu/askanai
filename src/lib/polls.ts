@@ -271,15 +271,48 @@ export const getPollWithQuestions = async (slug: string): Promise<{
   };
 };
 
+// Check if user has already voted on a poll
+export const hasAlreadyVoted = async (pollId: string): Promise<boolean> => {
+  const fingerprint = getFingerprint();
+  
+  // Check localStorage first for immediate feedback
+  const localKey = `voted_${pollId}`;
+  if (localStorage.getItem(localKey)) {
+    return true;
+  }
+  
+  // Check database as fallback
+  const { data: existing } = await supabase
+    .from('responses')
+    .select('id')
+    .eq('poll_id', pollId)
+    .eq('fingerprint', fingerprint)
+    .maybeSingle();
+  
+  if (existing) {
+    // Sync localStorage
+    localStorage.setItem(localKey, 'true');
+    return true;
+  }
+  
+  return false;
+};
+
 // Submit response
 export const submitResponse = async (
   pollId: string,
   answers: Record<string, any>,
   respondentName?: string
-): Promise<Response | null> => {
+): Promise<{ success: boolean; response?: Response; error?: string }> => {
   const fingerprint = getFingerprint();
+  const localKey = `voted_${pollId}`;
 
-  // Check for duplicate submission (use maybeSingle to avoid 406 error)
+  // Check localStorage first for immediate feedback
+  if (localStorage.getItem(localKey)) {
+    return { success: false, error: 'already_voted' };
+  }
+
+  // Check for duplicate submission in database
   const { data: existing } = await supabase
     .from('responses')
     .select('id')
@@ -288,8 +321,9 @@ export const submitResponse = async (
     .maybeSingle();
 
   if (existing) {
-    console.warn('Duplicate submission detected');
-    // Allow for now, but could return null to prevent
+    // Sync localStorage and prevent submission
+    localStorage.setItem(localKey, 'true');
+    return { success: false, error: 'already_voted' };
   }
 
   // Create response
@@ -305,7 +339,7 @@ export const submitResponse = async (
 
   if (responseError || !response) {
     console.error('Error creating response:', responseError);
-    return null;
+    return { success: false, error: 'submission_failed' };
   }
 
   // Create answers
@@ -334,7 +368,10 @@ export const submitResponse = async (
     console.error('Error creating answers:', answersError);
   }
 
-  return response as Response;
+  // Mark as voted in localStorage
+  localStorage.setItem(localKey, 'true');
+
+  return { success: true, response: response as Response };
 };
 
 // Get poll results - uses responses_public view to hide fingerprint data
