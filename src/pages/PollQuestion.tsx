@@ -248,15 +248,21 @@ const PollQuestion = () => {
             </div>
           )}
 
-          {/* Rating (1-5) - Large tap targets */}
+          {/* Rating - Large tap targets */}
           {question.type === "rating" && (
-            <div className="flex justify-center gap-4">
-              {[1, 2, 3, 4, 5].map((num) => (
+            <div className={cn(
+              "flex justify-center",
+              (question.settings_json?.scale === 10) ? "flex-wrap gap-2" : "gap-4"
+            )}>
+              {Array.from({ length: question.settings_json?.scale || 5 }, (_, i) => i + 1).map((num) => (
                 <button
                   key={num}
                   onClick={() => handleTapSelect(num)}
                   className={cn(
-                    "flex h-16 w-16 items-center justify-center rounded-2xl border-2 text-2xl font-bold transition-all duration-200",
+                    "flex items-center justify-center rounded-2xl border-2 font-bold transition-all duration-200",
+                    (question.settings_json?.scale === 10) 
+                      ? "h-12 w-12 text-base" 
+                      : "h-16 w-16 text-2xl",
                     tappedOption === String(num)
                       ? "border-primary bg-primary text-primary-foreground scale-110 shadow-[0_0_30px_hsl(var(--primary)/0.5)]"
                       : currentAnswer === num

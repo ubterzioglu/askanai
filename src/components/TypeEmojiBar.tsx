@@ -1,9 +1,10 @@
 import { cn } from "@/lib/utils";
 
-type QuestionType = 
+export type QuestionType = 
   | "single_choice" 
   | "multiple_choice" 
   | "rating" 
+  | "rating_10"
   | "nps" 
   | "ranking" 
   | "short_text" 
@@ -17,7 +18,8 @@ interface TypeEmojiBarProps {
 const types: { type: QuestionType; emoji: string; label: string }[] = [
   { type: "single_choice", emoji: "⚪", label: "Single" },
   { type: "multiple_choice", emoji: "☑️", label: "Multi" },
-  { type: "rating", emoji: "⭐", label: "Rating" },
+  { type: "rating", emoji: "⭐", label: "1-5" },
+  { type: "rating_10", emoji: "🌟", label: "1-10" },
   { type: "nps", emoji: "🔥", label: "NPS" },
   { type: "ranking", emoji: "🧠", label: "Rank" },
   { type: "short_text", emoji: "💬", label: "Text" },

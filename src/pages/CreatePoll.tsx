@@ -16,14 +16,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-type QuestionType = 
-  | "single_choice" 
-  | "multiple_choice" 
-  | "rating" 
-  | "nps" 
-  | "ranking" 
-  | "short_text" 
-  | "emoji";
+import { QuestionType } from "@/components/TypeEmojiBar";
 
 interface Question {
   id: string;
@@ -162,8 +155,19 @@ const CreatePoll = () => {
     setCurrentQuestionIndex(questions.length);
   };
 
-  const needsOptions = (type: QuestionType) =>
+const needsOptions = (type: QuestionType) =>
     ["single_choice", "multiple_choice", "ranking"].includes(type);
+
+  // Convert UI type to database type with settings
+  const getDbTypeAndSettings = (uiType: QuestionType): { type: string; settings?: { scale: number } } => {
+    if (uiType === "rating_10") {
+      return { type: "rating", settings: { scale: 10 } };
+    }
+    if (uiType === "rating") {
+      return { type: "rating", settings: { scale: 5 } };
+    }
+    return { type: uiType };
+  };
 
   const isQuestionComplete = (q: Question) =>
     q.prompt.trim() &&
@@ -185,12 +189,16 @@ const CreatePoll = () => {
       const result = await createPoll(
         questions[0].prompt, // Use first question as title
         null,
-        questions.map((q) => ({
-          type: q.type,
-          prompt: q.prompt,
-          options: q.options.filter((o) => o.trim()),
-          isRequired: true,
-        })),
+        questions.map((q) => {
+          const { type, settings } = getDbTypeAndSettings(q.type);
+          return {
+            type: type as any,
+            prompt: q.prompt,
+            options: q.options.filter((o) => o.trim()),
+            isRequired: true,
+            settingsJson: settings,
+          };
+        }),
         { visibility, allowComments, previewImageUrl: uploadedImageUrl }
       );
 
@@ -315,11 +323,22 @@ const CreatePoll = () => {
             </div>
           )}
 
-          {/* Rating preview */}
+          {/* Rating 1-5 preview */}
           {currentQuestion.type === "rating" && (
             <div className="flex justify-center gap-3">
               {[1, 2, 3, 4, 5].map((num) => (
                 <div key={num} className="rating-option">
+                  {num}
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Rating 1-10 preview */}
+          {currentQuestion.type === "rating_10" && (
+            <div className="flex flex-wrap justify-center gap-2">
+              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
+                <div key={num} className="rating-option h-10 w-10 text-sm">
                   {num}
                 </div>
               ))}
