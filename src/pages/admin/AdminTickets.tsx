@@ -56,7 +56,8 @@ export default function AdminTickets() {
     try {
       let query = supabase
         .from('tickets')
-        .select('*', { count: 'exact' })
+        // Do not use `select('*')` because some internal columns are not selectable by design.
+        .select('id, type, message, status, admin_note, created_at, resolved_at, poll_id, comment_id', { count: 'exact' })
         .order('created_at', { ascending: false })
         .range(page * PAGE_SIZE, (page + 1) * PAGE_SIZE - 1);
 
