@@ -7,6 +7,7 @@ import { TypeEmojiBar } from "@/components/TypeEmojiBar";
 import { ShareSheet } from "@/components/ShareSheet";
 import { createPoll } from "@/lib/polls";
 import { supabase } from "@/integrations/supabase/client";
+import { apiJson } from "@/lib/api";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import {
@@ -81,13 +82,17 @@ const CreatePoll = () => {
 
     setIsUploadingImage(true);
     try {
-      const fileExt = previewImage.name.split('.').pop();
-      const fileName = `${crypto.randomUUID()}.${fileExt}`;
-      const filePath = `previews/${fileName}`;
+      const signed = await apiJson<{ path: string; token: string; publicUrl: string }>(
+        '/api/storage/poll-image-signed-upload',
+        { method: 'POST', body: { contentType: previewImage.type }, includeAuth: true }
+      );
 
       const { error: uploadError } = await supabase.storage
         .from('poll-images')
-        .upload(filePath, previewImage);
+        .uploadToSignedUrl(signed.path, signed.token, previewImage, {
+          contentType: previewImage.type,
+          cacheControl: '3600',
+        });
 
       if (uploadError) {
         console.error('Upload error:', uploadError);
@@ -95,11 +100,7 @@ const CreatePoll = () => {
         return null;
       }
 
-      const { data: { publicUrl } } = supabase.storage
-        .from('poll-images')
-        .getPublicUrl(filePath);
-
-      return publicUrl;
+      return signed.publicUrl;
     } catch (error) {
       console.error('Upload error:', error);
       return null;

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Share2, Copy, Check, Send, RefreshCw, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -45,7 +45,7 @@ const PollResults = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['comments', pollData?.poll?.id] });
       setComment("");
-      toast.success("comment added! 💬");
+      toast.success("comment added! ðŸ’¬");
     },
     onError: () => {
       toast.error("failed to add comment");
@@ -59,7 +59,7 @@ const PollResults = () => {
     const url = window.location.href.replace('/results', '');
     await navigator.clipboard.writeText(url);
     setCopied(true);
-    toast.success("link copied! 🔗");
+    toast.success("link copied! ðŸ”—");
     setTimeout(() => setCopied(false), 2000);
   };
 
@@ -75,84 +75,10 @@ const PollResults = () => {
     }
   };
 
-  // Calculate results for each question
-  const calculateResults = (questionId: string, questionType: string) => {
-    const questionAnswers = results?.answers?.filter((a: any) => a.question_id === questionId) || [];
-    const question = questions.find((q) => q.id === questionId);
-    const options = question?.options || [];
-
-    if (['single_choice', 'multiple_choice'].includes(questionType)) {
-      const counts: Record<string, number> = {};
-      options.forEach((o) => { counts[o.label] = 0; });
-
-      questionAnswers.forEach((a: any) => {
-        if (a.value_text && counts[a.value_text] !== undefined) {
-          counts[a.value_text]++;
-        }
-        if (a.value_json && Array.isArray(a.value_json)) {
-          a.value_json.forEach((v: string) => {
-            if (counts[v] !== undefined) counts[v]++;
-          });
-        }
-      });
-
-      const total = Object.values(counts).reduce((a, b) => a + b, 0) || 1;
-      return options.map((o) => ({
-        label: o.label,
-        count: counts[o.label] || 0,
-        percent: Math.round((counts[o.label] / total) * 100),
-      }));
-    }
-
-    if (questionType === 'rating') {
-      const scale = question?.settings_json?.scale || 5;
-      const values = questionAnswers.map((a: any) => a.value_number).filter(Boolean);
-      const avg = values.length > 0 ? values.reduce((a: number, b: number) => a + b, 0) / values.length : 0;
-      const distribution = Array(scale).fill(0);
-      values.forEach((v: number) => { if (v >= 1 && v <= scale) distribution[v - 1]++; });
-      const total = values.length || 1;
-      return {
-        average: avg.toFixed(1),
-        scale,
-        distribution: distribution.map((d) => Math.round((d / total) * 100)),
-      };
-    }
-
-    if (questionType === 'nps') {
-      const values = questionAnswers.map((a: any) => a.value_number).filter((v: any) => v !== null);
-      const total = values.length || 1;
-      const detractors = values.filter((v: number) => v <= 6).length;
-      const passives = values.filter((v: number) => v >= 7 && v <= 8).length;
-      const promoters = values.filter((v: number) => v >= 9).length;
-      const nps = Math.round(((promoters - detractors) / total) * 100);
-      return {
-        npsScore: nps,
-        detractors: Math.round((detractors / total) * 100),
-        passives: Math.round((passives / total) * 100),
-        promoters: Math.round((promoters / total) * 100),
-      };
-    }
-
-    if (questionType === 'emoji') {
-      const emojis = question?.settings_json?.emojis || ["😍", "😊", "😐", "😕", "😢"];
-      const counts: Record<string, number> = {};
-      emojis.forEach((e: string) => { counts[e] = 0; });
-      questionAnswers.forEach((a: any) => {
-        if (a.value_text && counts[a.value_text] !== undefined) {
-          counts[a.value_text]++;
-        }
-      });
-      const total = Object.values(counts).reduce((a, b) => a + b, 0) || 1;
-      return emojis.map((e: string) => ({
-        emoji: e,
-        count: counts[e],
-        percent: Math.round((counts[e] / total) * 100),
-      }));
-    }
-
-    return null;
+  // Results are aggregated server-side to avoid exposing raw per-response datasets.
+  const getQuestionResults = (questionId: string) => {
+    return results?.resultsByQuestionId?.[questionId] ?? null;
   };
-
   if (pollLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background">
@@ -164,7 +90,7 @@ const PollResults = () => {
   if (!poll) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center gap-6 bg-background">
-        <div className="text-6xl">🤷</div>
+        <div className="text-6xl">ðŸ¤·</div>
         <h1 className="text-2xl font-bold">poll not found</h1>
         <Link to="/">
           <Button variant="outline" className="rounded-2xl">go home</Button>
@@ -230,7 +156,7 @@ const PollResults = () => {
               <span>{responseCount} oy</span>
             </div>
             <div className="inline-flex items-center gap-2 rounded-full bg-muted px-4 py-2 text-sm font-medium text-muted-foreground">
-              <span>👁️ {viewCount} görüntüleme</span>
+              <span>ðŸ‘ï¸ {viewCount} gÃ¶rÃ¼ntÃ¼leme</span>
             </div>
           </div>
           <h1 className="text-3xl font-bold md:text-4xl">{poll.title}</h1>
@@ -239,7 +165,7 @@ const PollResults = () => {
         {/* Results */}
         <div className="space-y-6">
           {questions.map((question, qi) => {
-            const questionResults = calculateResults(question.id, question.type);
+            const questionResults = getQuestionResults(question.id);
 
             if (question.type === 'single_choice' || question.type === 'multiple_choice') {
               return (
@@ -362,7 +288,7 @@ const PollResults = () => {
         {poll.allow_comments && (
           <div className="mt-12 animate-fade-in">
             <h2 className="mb-6 flex items-center gap-2 text-xl font-bold">
-              💬 discussion ({comments.length})
+              ðŸ’¬ discussion ({comments.length})
             </h2>
             
             {/* Comment input */}
@@ -401,7 +327,7 @@ const PollResults = () => {
                 </div>
               ))}
               {comments.length === 0 && (
-                <p className="text-center text-muted-foreground py-8">no comments yet. be the first! 👀</p>
+                <p className="text-center text-muted-foreground py-8">no comments yet. be the first! ðŸ‘€</p>
               )}
             </div>
           </div>
@@ -411,7 +337,7 @@ const PollResults = () => {
         <div className="mt-12 text-center">
           <Link to="/create">
             <Button className="btn-neon-green">
-              create your own poll ✨
+              create your own poll âœ¨
             </Button>
           </Link>
         </div>
@@ -421,3 +347,4 @@ const PollResults = () => {
 };
 
 export default PollResults;
+

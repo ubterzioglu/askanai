@@ -1,11 +1,25 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
-};
+function buildCorsHeaders(origin: string | null): Record<string, string> {
+  const allowlistRaw = Deno.env.get("ALLOWED_ORIGINS") || "";
+  const allowlist = allowlistRaw
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
+
+  const allowedOrigin = allowlist.length
+    ? (origin && allowlist.includes(origin) ? origin : "")
+    : "*";
+
+  const h: Record<string, string> = {
+    "Access-Control-Allow-Headers":
+      "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
+  };
+
+  if (allowedOrigin) h["Access-Control-Allow-Origin"] = allowedOrigin;
+  return h;
+}
 
 interface EmailRequest {
   email: string;
@@ -39,6 +53,9 @@ const isValidConfirmationUrl = (url: string): boolean => {
 
 const handler = async (req: Request): Promise<Response> => {
   console.log("send-confirmation-email function called");
+
+  const origin = req.headers.get("Origin");
+  const corsHeaders = buildCorsHeaders(origin);
 
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });

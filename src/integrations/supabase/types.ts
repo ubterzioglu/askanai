@@ -1,4 +1,4 @@
-export type Json =
+﻿export type Json =
   | string
   | number
   | boolean
@@ -14,6 +14,30 @@ export type Database = {
   }
   public: {
     Tables: {
+      abuse_events: {
+        Row: {
+          created_at: string
+          event_type: string
+          id: string
+          ip_hash: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          event_type: string
+          id?: string
+          ip_hash?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          event_type?: string
+          id?: string
+          ip_hash?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       answers: {
         Row: {
           created_at: string
@@ -73,8 +97,11 @@ export type Database = {
           display_name: string | null
           fingerprint: string | null
           id: string
+          ip_hash: string | null
           poll_id: string
           status: Database["public"]["Enums"]["comment_status"]
+          text_hash: string | null
+          user_agent_hash: string | null
           user_id: string | null
         }
         Insert: {
@@ -83,8 +110,11 @@ export type Database = {
           display_name?: string | null
           fingerprint?: string | null
           id?: string
+          ip_hash?: string | null
           poll_id: string
           status?: Database["public"]["Enums"]["comment_status"]
+          text_hash?: string | null
+          user_agent_hash?: string | null
           user_id?: string | null
         }
         Update: {
@@ -93,8 +123,11 @@ export type Database = {
           display_name?: string | null
           fingerprint?: string | null
           id?: string
+          ip_hash?: string | null
           poll_id?: string
           status?: Database["public"]["Enums"]["comment_status"]
+          text_hash?: string | null
+          user_agent_hash?: string | null
           user_id?: string | null
         }
         Relationships: [
@@ -151,19 +184,25 @@ export type Database = {
           created_at: string
           fingerprint: string
           id: string
+          ip_hash: string | null
           poll_id: string
+          user_agent_hash: string | null
         }
         Insert: {
           created_at?: string
           fingerprint: string
           id?: string
+          ip_hash?: string | null
           poll_id: string
+          user_agent_hash?: string | null
         }
         Update: {
           created_at?: string
           fingerprint?: string
           id?: string
+          ip_hash?: string | null
           poll_id?: string
+          user_agent_hash?: string | null
         }
         Relationships: [
           {
@@ -286,24 +325,30 @@ export type Database = {
           created_at: string
           fingerprint: string | null
           id: string
+          ip_hash: string | null
           poll_id: string
           respondent_name: string | null
+          user_agent_hash: string | null
           user_id: string | null
         }
         Insert: {
           created_at?: string
           fingerprint?: string | null
           id?: string
+          ip_hash?: string | null
           poll_id: string
           respondent_name?: string | null
+          user_agent_hash?: string | null
           user_id?: string | null
         }
         Update: {
           created_at?: string
           fingerprint?: string | null
           id?: string
+          ip_hash?: string | null
           poll_id?: string
           respondent_name?: string | null
+          user_agent_hash?: string | null
           user_id?: string | null
         }
         Relationships: [
@@ -329,33 +374,42 @@ export type Database = {
           comment_id: string | null
           created_at: string
           id: string
+          ip_hash: string | null
           message: string | null
           poll_id: string | null
           resolved_at: string | null
           status: string
+          text_hash: string | null
           type: string
+          user_agent_hash: string | null
         }
         Insert: {
           admin_note?: string | null
           comment_id?: string | null
           created_at?: string
           id?: string
+          ip_hash?: string | null
           message?: string | null
           poll_id?: string | null
           resolved_at?: string | null
           status?: string
+          text_hash?: string | null
           type: string
+          user_agent_hash?: string | null
         }
         Update: {
           admin_note?: string | null
           comment_id?: string | null
           created_at?: string
           id?: string
+          ip_hash?: string | null
           message?: string | null
           poll_id?: string | null
           resolved_at?: string | null
           status?: string
+          text_hash?: string | null
           type?: string
+          user_agent_hash?: string | null
         }
         Relationships: [
           {
@@ -418,8 +472,6 @@ export type Database = {
           display_name: string | null
           id: string | null
           poll_id: string | null
-          status: Database["public"]["Enums"]["comment_status"] | null
-          user_id: string | null
         }
         Insert: {
           body?: string | null
@@ -427,8 +479,6 @@ export type Database = {
           display_name?: string | null
           id?: string | null
           poll_id?: string | null
-          status?: Database["public"]["Enums"]["comment_status"] | null
-          user_id?: string | null
         }
         Update: {
           body?: string | null
@@ -436,8 +486,6 @@ export type Database = {
           display_name?: string | null
           id?: string | null
           poll_id?: string | null
-          status?: Database["public"]["Enums"]["comment_status"] | null
-          user_id?: string | null
         }
         Relationships: [
           {
@@ -461,7 +509,6 @@ export type Database = {
           allow_comments: boolean | null
           close_after_responses: number | null
           created_at: string | null
-          created_by_user_id: string | null
           description: string | null
           id: string | null
           open_until: string | null
@@ -476,7 +523,6 @@ export type Database = {
           allow_comments?: boolean | null
           close_after_responses?: number | null
           created_at?: string | null
-          created_by_user_id?: string | null
           description?: string | null
           id?: string | null
           open_until?: string | null
@@ -493,7 +539,6 @@ export type Database = {
           allow_comments?: boolean | null
           close_after_responses?: number | null
           created_at?: string | null
-          created_by_user_id?: string | null
           description?: string | null
           id?: string | null
           open_until?: string | null
@@ -514,21 +559,18 @@ export type Database = {
           id: string | null
           poll_id: string | null
           respondent_name: string | null
-          user_id: string | null
         }
         Insert: {
           created_at?: string | null
           id?: string | null
           poll_id?: string | null
           respondent_name?: string | null
-          user_id?: string | null
         }
         Update: {
           created_at?: string | null
           id?: string | null
           poll_id?: string | null
           respondent_name?: string | null
-          user_id?: string | null
         }
         Relationships: [
           {
