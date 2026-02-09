@@ -37,15 +37,27 @@ const isValidEmail = (email: string): boolean => {
 const isValidConfirmationUrl = (url: string): boolean => {
   try {
     const parsed = new URL(url);
-    const trustedDomains = [
-      'askanai.lovable.app',
-      'localhost',
-      'lovable.app',
-      'supabase.co'
-    ];
-    return trustedDomains.some(domain => 
-      parsed.hostname === domain || parsed.hostname.endsWith(`.${domain}`)
-    );
+
+    // Build trusted hosts from ALLOWED_ORIGINS plus Supabase domains.
+    const allowlistRaw = Deno.env.get("ALLOWED_ORIGINS") || "";
+    const allowlist = allowlistRaw
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
+
+    const trustedHosts = new Set<string>(["localhost", "127.0.0.1", "supabase.co"]);
+    for (const origin of allowlist) {
+      try {
+        const o = new URL(origin);
+        if (o.hostname) trustedHosts.add(o.hostname);
+      } catch {
+        // ignore invalid origins
+      }
+    }
+
+    return Array.from(trustedHosts).some((host) => {
+      return parsed.hostname === host || parsed.hostname.endsWith(`.${host}`);
+    });
   } catch {
     return false;
   }
