@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
+import { apiJson } from '@/lib/api';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -115,12 +116,8 @@ export default function AdminPolls() {
     
     setDeleting(true);
     try {
-      const { error } = await supabase
-        .from('polls')
-        .delete()
-        .eq('id', deleteId);
-
-      if (error) throw error;
+      // Use backend archival delete to keep a snapshot and enforce ownership/admin checks server-side.
+      await apiJson(`/api/polls/${deleteId}/delete`, { method: 'DELETE', includeAuth: true });
 
       setPolls(polls.filter(p => p.id !== deleteId));
       setTotalCount(prev => prev - 1);

@@ -6,6 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Shield, Loader2, Eye, EyeOff } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
+import { getSiteUrl } from '@/lib/siteUrl';
+import { apiJson } from '@/lib/api';
 
 export default function AdminLogin() {
   const [email, setEmail] = useState('');
@@ -37,6 +39,13 @@ export default function AdminLogin() {
       }
 
       if (data.user) {
+        // Optional one-time bootstrap: if server is configured, grant admin role to whitelisted emails.
+        try {
+          await apiJson('/api/admin/bootstrap', { method: 'POST', includeAuth: true });
+        } catch {
+          // ignore
+        }
+
         // Check if user is admin
         const { data: isAdmin, error: roleError } = await supabase.rpc('has_role', {
           _user_id: data.user.id,
@@ -85,7 +94,7 @@ export default function AdminLogin() {
         email,
         password,
         options: {
-          emailRedirectTo: `${window.location.origin}/admin/login`
+          emailRedirectTo: `${getSiteUrl()}/admin/login`
         }
       });
 

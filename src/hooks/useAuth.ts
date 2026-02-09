@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { User, Session } from '@supabase/supabase-js';
+import { getSiteUrl } from '@/lib/siteUrl';
 
 export function useAuth() {
   const [user, setUser] = useState<User | null>(null);
@@ -40,7 +41,7 @@ export function useAuth() {
       email,
       password,
       options: {
-        emailRedirectTo: `${window.location.origin}/`,
+        emailRedirectTo: `${getSiteUrl()}/`,
       },
     });
     return { data, error };

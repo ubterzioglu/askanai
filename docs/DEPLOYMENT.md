@@ -42,6 +42,12 @@ Set these in Vercel Project Settings (not in the client):
 - `IP_HASH_SALT` = random secret string
 - `ALLOWED_ORIGINS` = comma-separated allowlist
 
+Optional (one-time admin bootstrap):
+
+- `BOOTSTRAP_ADMIN_EMAILS` = comma-separated emails that can self-promote to admin on login (e.g. `you@example.com`)
+  - When set, `POST /api/admin/bootstrap` will grant the caller `admin` role if their email matches.
+  - After first successful login, remove this env var.
+
 ### Environment variables (Client)
 
 Vite uses:
@@ -68,4 +74,3 @@ vercel dev
 ## Security headers
 
 Configured in `vercel.json`.
-
