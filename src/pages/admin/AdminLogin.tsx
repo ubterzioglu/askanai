@@ -5,8 +5,6 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Shield, Loader2, Eye, EyeOff } from 'lucide-react';
 import { toast } from 'sonner';
-import { cn } from '@/lib/utils';
-import { getSiteUrl } from '@/lib/siteUrl';
 import { apiJson } from '@/lib/api';
 
 export default function AdminLogin() {
@@ -14,7 +12,6 @@ export default function AdminLogin() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [mode, setMode] = useState<'login' | 'signup'>('login');
   const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -74,50 +71,6 @@ export default function AdminLogin() {
     }
   };
 
-  const handleSignup = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!email || !password) {
-      toast.error('Please fill in all fields');
-      return;
-    }
-
-    if (password.length < 6) {
-      toast.error('Password must be at least 6 characters');
-      return;
-    }
-
-    setLoading(true);
-
-    try {
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          emailRedirectTo: `${getSiteUrl()}/admin/login`
-        }
-      });
-
-      if (error) {
-        if (error.message.includes('already registered')) {
-          toast.error('This email is already registered. Please sign in.');
-        } else {
-          toast.error(error.message);
-        }
-        return;
-      }
-
-      if (data.user) {
-        toast.success('Account created! Please check your email to verify, then contact admin for access.');
-        setMode('login');
-      }
-    } catch (err) {
-      toast.error('An unexpected error occurred');
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <div className="w-full max-w-md space-y-8">
@@ -127,47 +80,13 @@ export default function AdminLogin() {
             <Shield className="w-10 h-10 text-neon-blue" />
           </div>
           <div>
-            <h1 className="text-3xl font-bold">
-              {mode === 'login' ? 'Admin Login' : 'Create Account'}
-            </h1>
-            <p className="text-muted-foreground mt-2">
-              {mode === 'login' 
-                ? 'Sign in to access the admin panel' 
-                : 'Register to request admin access'}
-            </p>
+            <h1 className="text-3xl font-bold">Admin Login</h1>
+            <p className="text-muted-foreground mt-2">Sign in to access the admin panel</p>
           </div>
         </div>
 
-        {/* Tabs */}
-        <div className="flex rounded-xl bg-card p-1 border border-border">
-          <button
-            type="button"
-            onClick={() => setMode('login')}
-            className={cn(
-              "flex-1 py-2 text-sm font-medium rounded-lg transition-colors",
-              mode === 'login' 
-                ? "bg-neon-blue text-background" 
-                : "text-muted-foreground hover:text-foreground"
-            )}
-          >
-            Sign In
-          </button>
-          <button
-            type="button"
-            onClick={() => setMode('signup')}
-            className={cn(
-              "flex-1 py-2 text-sm font-medium rounded-lg transition-colors",
-              mode === 'signup' 
-                ? "bg-neon-blue text-background" 
-                : "text-muted-foreground hover:text-foreground"
-            )}
-          >
-            Sign Up
-          </button>
-        </div>
-
         {/* Form */}
-        <form onSubmit={mode === 'login' ? handleLogin : handleSignup} className="space-y-6">
+        <form onSubmit={handleLogin} className="space-y-6">
           <div className="space-y-4">
             <div className="space-y-2">
               <label className="text-sm font-medium text-muted-foreground">
@@ -202,11 +121,6 @@ export default function AdminLogin() {
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
               </div>
-              {mode === 'signup' && (
-                <p className="text-xs text-muted-foreground">
-                  Minimum 6 characters
-                </p>
-              )}
             </div>
           </div>
 
@@ -218,10 +132,10 @@ export default function AdminLogin() {
             {loading ? (
               <>
                 <Loader2 className="w-5 h-5 animate-spin mr-2" />
-                {mode === 'login' ? 'Signing in...' : 'Creating account...'}
+                Signing in...
               </>
             ) : (
-              mode === 'login' ? 'Sign In' : 'Create Account'
+              'Sign In'
             )}
           </Button>
         </form>

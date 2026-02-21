@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { User, Session } from '@supabase/supabase-js';
-import { getSiteUrl } from '@/lib/siteUrl';
 
 export function useAuth() {
   const [user, setUser] = useState<User | null>(null);
@@ -36,17 +35,6 @@ export function useAuth() {
     return { data, error };
   };
 
-  const signUpWithEmail = async (email: string, password: string) => {
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: `${getSiteUrl()}/`,
-      },
-    });
-    return { data, error };
-  };
-
   const signOut = async () => {
     const { error } = await supabase.auth.signOut();
     return { error };
@@ -57,7 +45,6 @@ export function useAuth() {
     session,
     loading,
     signInWithEmail,
-    signUpWithEmail,
     signOut,
     isAuthenticated: !!user,
   };

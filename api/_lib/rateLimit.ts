@@ -7,6 +7,7 @@ type Limits = {
 };
 
 const LIMITS: Record<string, Limits> = {
+  auth_register: { perHour: 20, perDay: 80, perWeek: 200 },
   poll_create: { perHour: 20, perDay: 100, perWeek: 300 },
   poll_image_upload: { perHour: 40, perDay: 200, perWeek: 600 },
   poll_respond: { perHour: 120, perDay: 400, perWeek: 1200 },
